@@ -103,7 +103,7 @@ const Menu = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
           <div className="bg-white rounded-lg p-4 border-2 border-orange-200 hover:border-orange-400 transition-colors cursor-pointer">
             <h3 className="font-semibold text-orange-600">Combo Família</h3>
-            <p className="text-sm text-gray-600 mb-2">2 Pizzas G + 2 Refrigerantes</p>
+            <p className="text-sm text-gray-600 mb-2">2 Pizzas G + 1 Refrigerantes</p>
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">R$ 89,90</span>
               <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
@@ -113,9 +113,9 @@ const Menu = () => {
           </div>
           <div className="bg-white rounded-lg p-4 border-2 border-blue-200 hover:border-blue-400 transition-colors cursor-pointer">
             <h3 className="font-semibold text-blue-600">Combo Casal</h3>
-            <p className="text-sm text-gray-600 mb-2">1 Pizza G + 2 Refrigerantes</p>
+            <p className="text-sm text-gray-600 mb-2">1 Pizza G + 1 Refrigerantes</p>
             <div className="flex items-center justify-between">
-              <span className="text-lg font-bold">R$ 54,90</span>
+              <span className="text-lg font-bold">R$ 49,90</span>
               <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                 Economia R$ 8
               </span>
