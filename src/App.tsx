@@ -8,7 +8,6 @@ import { CartProvider } from "./contexts/CartContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import ConversionTrustSignals from "./components/ConversionTrustSignals";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
@@ -25,7 +24,6 @@ const AppContent = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header cartItemCount={state.items.reduce((sum, item) => sum + item.quantity, 0)} />
-      <ConversionTrustSignals />
       <main className="flex-1">
         <ErrorBoundary>
           <Routes>

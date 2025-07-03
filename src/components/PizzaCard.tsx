@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Plus, Star, Clock } from 'lucide-react';
 import PizzaCustomizationModal from './PizzaCustomizationModal';
+import WhatsAppOrder from './WhatsAppOrder';
 import { ButtonLoading } from './LoadingStates';
 
 interface PizzaCardProps {
@@ -78,7 +79,7 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
             className="w-full h-48 object-cover cursor-pointer"
           />
           
-          {/* Rating Badge - Simplificado */}
+          {/* Rating Badge */}
           <div className="absolute top-3 right-3 bg-white rounded-full px-2 py-1 flex items-center space-x-1 shadow-sm">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
             <span className="text-sm font-medium">{rating}</span>
@@ -91,8 +92,8 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
             <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
           </div>
           
-          {/* Preço e CTA - Otimizado para Conversão */}
-          <div className="flex items-center justify-between">
+          {/* Preço */}
+          <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
               <span className="text-xs text-muted-foreground">A partir de</span>
               <div className="flex items-center gap-2">
@@ -107,38 +108,49 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600 font-medium">
                 <Clock className="w-3 h-3" />
-                <span>Entrega 25-35min</span>
+                <span>Entrega 30-45min</span>
               </div>
             </div>
+          </div>
+          
+          {/* Botões de Ação */}
+          <div className="space-y-2">
+            {/* WhatsApp - Botão Principal */}
+            <WhatsAppOrder 
+              variant="quick"
+              text="Pedir via WhatsApp"
+              pizzaName={name}
+              pizzaPrice={finalPrice}
+              className="w-full justify-center text-sm"
+            />
             
-            {/* Botões de Ação - Focados */}
-            <div className="flex flex-col gap-2">
+            {/* Botões Secundários */}
+            <div className="flex gap-2">
               {isAddingToCart ? (
-                <ButtonLoading isLoading={true} className="text-xs px-4 py-2">
+                <ButtonLoading isLoading={true} className="flex-1 text-xs px-4 py-2">
                   Adicionando...
                 </ButtonLoading>
               ) : (
-                <>
-                  <button
-                    onClick={handleQuickAdd}
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-semibold text-sm flex items-center gap-1"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Adicionar
-                  </button>
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded-full transition-colors text-xs"
-                  >
-                    Personalizar
-                  </button>
-                </>
+                <button
+                  onClick={handleQuickAdd}
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium text-sm flex items-center justify-center gap-1"
+                >
+                  <Plus className="w-4 h-4" />
+                  Carrinho
+                </button>
               )}
+              
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full transition-colors text-sm"
+              >
+                Personalizar
+              </button>
             </div>
           </div>
 
           {/* Frete Grátis Indicator */}
-          {finalPrice >= 40 && (
+          {finalPrice >= 50 && (
             <div className="mt-3 pt-3 border-t border-gray-100">
               <div className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium text-center">
                 🚚 Frete GRÁTIS nesta pizza!

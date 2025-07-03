@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import WhatsAppOrder from '../components/WhatsAppOrder';
 
 const Cart = () => {
   const { state, dispatch } = useCart();
-  const [deliveryFee] = useState(5.99);
+  const [deliveryFee] = useState(8.00); // Taxa fixa realista
 
   const updateQuantity = (id: string, quantity: number) => {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
@@ -17,22 +18,29 @@ const Cart = () => {
   };
 
   const subtotal = state.total;
-  const total = subtotal + (subtotal >= 40 ? 0 : deliveryFee);
-  const isFreeDelivery = subtotal >= 40;
+  const total = subtotal + (subtotal >= 50 ? 0 : deliveryFee);
+  const isFreeDelivery = subtotal >= 50;
 
   if (state.items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center max-w-md mx-auto px-4">
           <ShoppingBag className="w-24 h-24 text-gray-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Seu carrinho está vazio</h2>
           <p className="text-gray-600 mb-8">Que tal escolher uma deliciosa pizza?</p>
-          <Link 
-            to="/menu"
-            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-medium transition-colors"
-          >
-            Ver Cardápio
-          </Link>
+          
+          <div className="space-y-4">
+            <WhatsAppOrder 
+              text="🍕 Ver Pizzas no WhatsApp"
+              className="w-full justify-center py-3"
+            />
+            <Link 
+              to="/menu"
+              className="block bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-medium transition-colors"
+            >
+              Ver Cardápio Completo
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -113,7 +121,7 @@ const Cart = () => {
                 
                 {!isFreeDelivery && (
                   <p className="text-sm text-orange-600">
-                    Faltam R$ {(40 - subtotal).toFixed(2).replace('.', ',')} para frete grátis!
+                    Faltam R$ {(50 - subtotal).toFixed(2).replace('.', ',')} para frete grátis!
                   </p>
                 )}
                 
@@ -125,16 +133,24 @@ const Cart = () => {
                 </div>
               </div>
               
+              {/* Botão WhatsApp Principal */}
+              <WhatsAppOrder 
+                variant="cart"
+                text="🍕 Finalizar via WhatsApp"
+                className="mb-3"
+              />
+              
+              {/* Checkout Tradicional */}
               <Link
                 to="/checkout"
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-full font-bold text-center transition-colors block"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium text-center transition-colors block mb-3"
               >
-                Finalizar Pedido
+                Checkout Tradicional
               </Link>
               
               <Link
                 to="/menu"
-                className="w-full border-2 border-orange-500 text-orange-500 hover:bg-orange-50 py-3 rounded-full font-medium text-center transition-colors block mt-3"
+                className="w-full border-2 border-orange-500 text-orange-500 hover:bg-orange-50 py-3 rounded-lg font-medium text-center transition-colors block"
               >
                 Adicionar Mais Itens
               </Link>
