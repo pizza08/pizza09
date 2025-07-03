@@ -19,7 +19,7 @@ const Header = ({
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Forno Nobre</h1>
-              <p className="text-xs text-orange-500">Delivery Premium</p>
+              <p className="text-xs text-orange-500">Pizzaria Delivery</p>
             </div>
           </Link>
 
