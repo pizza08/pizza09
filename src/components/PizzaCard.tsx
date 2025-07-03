@@ -4,6 +4,8 @@ import { Plus, Star } from 'lucide-react';
 import PizzaCustomizationModal from './PizzaCustomizationModal';
 import RatingSystem from './RatingSystem';
 import SocialShare from './SocialShare';
+import ImageWithFallback from './ImageWithFallback';
+import { ButtonLoading } from './LoadingStates';
 
 interface PizzaCardProps {
   id: string;
@@ -18,11 +20,17 @@ interface PizzaCardProps {
 const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }: PizzaCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showRating, setShowRating] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const pizza = { id, name, description, price, image, rating, category: '', ingredients: [] };
 
-  const handleQuickAdd = (e: React.MouseEvent) => {
+  const handleQuickAdd = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    setIsAddingToCart(true);
+    
+    // Simular delay da operação
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
     onAddToCart({
       id,
       name: `${name} (Média)`,
@@ -30,6 +38,8 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
       image,
       quantity: 1
     });
+    
+    setIsAddingToCart(false);
   };
 
   const handleRatingSubmitted = (ratingValue: number, comment: string) => {
@@ -41,10 +51,11 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
     <>
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
         <div className="relative" onClick={() => setIsModalOpen(true)}>
-          <img 
-            src={image} 
+          <ImageWithFallback
+            src={image}
             alt={name}
             className="w-full h-48 object-cover cursor-pointer"
+            fallbackClassName="w-full h-48"
           />
           <div className="absolute top-3 right-3 bg-white rounded-full px-2 py-1 flex items-center space-x-1">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
@@ -67,19 +78,25 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
             </div>
             
             <div className="flex space-x-2">
-              <button
-                onClick={handleQuickAdd}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full transition-colors"
-                title="Adicionar tamanho médio"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium"
-              >
-                Personalizar
-              </button>
+              {isAddingToCart ? (
+                <ButtonLoading isLoading={true}>Adicionando...</ButtonLoading>
+              ) : (
+                <>
+                  <button
+                    onClick={handleQuickAdd}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full transition-colors"
+                    title="Adicionar tamanho médio"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium"
+                  >
+                    Personalizar
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
