@@ -1,7 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Clock, MapPin, Star, ShoppingBag, Users } from 'lucide-react';
-
 interface Activity {
   id: number;
   type: 'order' | 'review' | 'delivery' | 'repeat' | 'viewing';
@@ -12,83 +10,70 @@ interface Activity {
   pizza?: string;
   rating?: number;
 }
-
 const LiveActivityFeed = () => {
   const [currentActivity, setCurrentActivity] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-
-  const activities: Activity[] = [
-    {
-      id: 1,
-      type: 'order',
-      customer: 'Marina',
-      message: 'fez um pedido',
-      location: 'Vila Madalena',
-      time: 'agora',
-      pizza: 'Margherita Premium'
-    },
-    {
-      id: 2,
-      type: 'review',
-      customer: 'Carlos',
-      message: 'avaliou',
-      location: 'Pinheiros',
-      time: '2 min',
-      rating: 5,
-      pizza: 'Pepperoni Premium'
-    },
-    {
-      id: 3,
-      type: 'delivery',
-      customer: 'Entrega',
-      message: 'finalizada',
-      location: 'Jardim Europa',
-      time: '3 min',
-      pizza: 'Quatro Queijos'
-    },
-    {
-      id: 4,
-      type: 'repeat',
-      customer: 'João',
-      message: 'repetiu o pedido',
-      location: 'Moema',
-      time: '5 min',
-      pizza: 'Calabresa Especial'
-    },
-    {
-      id: 5,
-      type: 'viewing',
-      customer: '23 pessoas',
-      message: 'visualizando',
-      location: 'Online',
-      time: 'agora',
-      pizza: 'este cardápio'
-    },
-    {
-      id: 6,
-      type: 'order',
-      customer: 'Ana',
-      message: 'fez pedido de',
-      location: 'Itaim Bibi',
-      time: '7 min',
-      pizza: '3 pizzas grandes'
-    }
-  ];
-
+  const activities: Activity[] = [{
+    id: 1,
+    type: 'order',
+    customer: 'Marina',
+    message: 'fez um pedido',
+    location: 'Vila Madalena',
+    time: 'agora',
+    pizza: 'Margherita Premium'
+  }, {
+    id: 2,
+    type: 'review',
+    customer: 'Carlos',
+    message: 'avaliou',
+    location: 'Pinheiros',
+    time: '2 min',
+    rating: 5,
+    pizza: 'Pepperoni Premium'
+  }, {
+    id: 3,
+    type: 'delivery',
+    customer: 'Entrega',
+    message: 'finalizada',
+    location: 'Jardim Europa',
+    time: '3 min',
+    pizza: 'Quatro Queijos'
+  }, {
+    id: 4,
+    type: 'repeat',
+    customer: 'João',
+    message: 'repetiu o pedido',
+    location: 'Moema',
+    time: '5 min',
+    pizza: 'Calabresa Especial'
+  }, {
+    id: 5,
+    type: 'viewing',
+    customer: '23 pessoas',
+    message: 'visualizando',
+    location: 'Online',
+    time: 'agora',
+    pizza: 'este cardápio'
+  }, {
+    id: 6,
+    type: 'order',
+    customer: 'Ana',
+    message: 'fez pedido de',
+    location: 'Itaim Bibi',
+    time: '7 min',
+    pizza: '3 pizzas grandes'
+  }];
   useEffect(() => {
     const interval = setInterval(() => {
       setIsVisible(false);
       setTimeout(() => {
-        setCurrentActivity((prev) => (prev + 1) % activities.length);
+        setCurrentActivity(prev => (prev + 1) % activities.length);
         setIsVisible(true);
       }, 300);
     }, 4500);
-
     return () => clearInterval(interval);
   }, []);
-
   const activity = activities[currentActivity];
-
   const getIcon = () => {
     switch (activity.type) {
       case 'order':
@@ -105,7 +90,6 @@ const LiveActivityFeed = () => {
         return <Clock className="w-4 h-4 text-gray-500" />;
     }
   };
-
   const getBgColor = () => {
     switch (activity.type) {
       case 'order':
@@ -122,40 +106,8 @@ const LiveActivityFeed = () => {
         return 'bg-gray-50 border-gray-200';
     }
   };
-
-  return (
-    <div className="fixed bottom-4 left-4 z-50 max-w-sm">
-      <div
-        className={`${getBgColor()} rounded-lg shadow-lg border p-4 transition-all duration-300 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-        }`}
-      >
-        <div className="flex items-center space-x-3">
-          {getIcon()}
-          <div className="flex-1">
-            <p className="text-sm font-medium text-gray-900">
-              <span className="font-bold">{activity.customer}</span> {activity.message}
-              {activity.pizza && (
-                <span className="block text-xs text-gray-600 mt-1">
-                  {activity.pizza}
-                </span>
-              )}
-              {activity.rating && (
-                <span className="text-yellow-500 ml-1">
-                  {'★'.repeat(activity.rating)}
-                </span>
-              )}
-            </p>
-            <p className="text-xs text-gray-500 flex items-center mt-1">
-              <MapPin className="w-3 h-3 mr-1" />
-              {activity.location} • há {activity.time}
-            </p>
-          </div>
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="fixed bottom-4 left-4 z-50 max-w-sm">
+      
+    </div>;
 };
-
 export default LiveActivityFeed;
