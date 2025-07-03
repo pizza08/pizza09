@@ -36,7 +36,7 @@ const PizzaCustomizationModal = ({ pizza, isOpen, onClose }: PizzaCustomizationM
   };
 
   const calculateTotalPrice = () => {
-    const basePrice = pizza.price * selectedSize.multiplier;
+    const basePrice = pizza.basePrice * selectedSize.multiplier;
     const extrasPrice = extraIngredients.reduce((total, ingredientId) => {
       const ingredient = availableIngredients.find(i => i.id === ingredientId);
       return total + (ingredient?.price || 0);
@@ -113,7 +113,7 @@ const PizzaCustomizationModal = ({ pizza, isOpen, onClose }: PizzaCustomizationM
                   <div className="font-semibold">{size.name}</div>
                   <div className="text-sm text-gray-600">{size.description}</div>
                   <div className="text-orange-500 font-bold mt-1">
-                    R$ {(pizza.price * size.multiplier).toFixed(2).replace('.', ',')}
+                    R$ {(pizza.basePrice * size.multiplier).toFixed(2).replace('.', ',')}
                   </div>
                 </button>
               ))}
