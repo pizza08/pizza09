@@ -1,133 +1,133 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Clock, MapPin, Users } from 'lucide-react';
-import LiveVisitorCounter from './LiveVisitorCounter';
+import React from 'react';
+import { Button } from './ui/button';
+import { ArrowRight, Clock, Truck, Shield } from 'lucide-react';
 
 const HeroSection = () => {
-  const [currentOffer, setCurrentOffer] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(3600);
-
-  const offers = [
-    {
-      title: "Pizza Gigante por R$ 39,90",
-      subtitle: "Válida até 22h - Apenas hoje!",
-      bgColor: "from-red-500 to-red-600"
-    },
-    {
-      title: "2 Pizzas Médias = R$ 59,90",
-      subtitle: "Economize R$ 20 - Oferta limitada",
-      bgColor: "from-green-500 to-green-600"
-    },
-    {
-      title: "Frete Grátis acima de R$ 45",
-      subtitle: "Em toda a cidade - Hoje e amanhã",
-      bgColor: "from-blue-500 to-blue-600"
+  const scrollToMenu = () => {
+    const element = document.getElementById('menu-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
-  ];
-
-  useEffect(() => {
-    const offerInterval = setInterval(() => {
-      setCurrentOffer((prev) => (prev + 1) % offers.length);
-    }, 4000);
-
-    const timerInterval = setInterval(() => {
-      setTimeLeft((prev) => prev > 0 ? prev - 1 : 3600);
-    }, 1000);
-
-    return () => {
-      clearInterval(offerInterval);
-      clearInterval(timerInterval);
-    };
-  }, []);
-
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-orange-500 via-orange-400 to-yellow-400 text-white py-16 overflow-hidden">
-      <div className="absolute inset-0 bg-black/20"></div>
+    <div className="relative bg-gradient-to-br from-orange-600 via-orange-500 to-red-500 text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-black/10"></div>
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
       
-      {/* Floating elements for depth */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-bounce-gentle"></div>
-      <div className="absolute bottom-20 right-10 w-32 h-32 bg-yellow-300/20 rounded-full blur-2xl animate-pulse"></div>
-      
-      {/* Banner rotativo de ofertas */}
-      <div className="relative z-20 mb-8">
-        <div className={`bg-gradient-to-r ${offers[currentOffer].bgColor} py-3 text-center animate-slide-up`}>
-          <div className="container mx-auto px-4">
-            <h2 className="text-lg font-bold font-serif">{offers[currentOffer].title}</h2>
-            <p className="text-sm opacity-90">{offers[currentOffer].subtitle}</p>
-          </div>
-        </div>
-      </div>
+      <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-28">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Content */}
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium">
+                <Shield className="w-4 h-4" />
+                <span>Entrega Garantida</span>
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                As Melhores Pizzas
+                <span className="block text-yellow-300">Direto na Sua Casa!</span>
+              </h1>
+              
+              <p className="text-xl sm:text-2xl text-orange-100 font-medium">
+                🔥 Sabores únicos, massa artesanal e ingredientes frescos
+              </p>
+              
+              <p className="text-lg text-orange-200 max-w-lg">
+                Mais de 10 mil clientes satisfeitos! Entregamos felicidade em cada fatia, 
+                com a qualidade que você merece e a rapidez que precisa.
+              </p>
+            </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="text-center lg:text-left animate-fade-in">
-            <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight font-serif">
-              A Melhor Pizza
-              <span className="block text-yellow-200 animate-scale-in">da Cidade!</span>
-            </h1>
-            
-            <div className="bg-white/10 backdrop-blur rounded-2xl p-4 mb-6 hover:bg-white/20 transition-all duration-300">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <span>Pedidos até 22h ganham desconto</span>
-                </div>
-                <div className="bg-red-500 px-3 py-1 rounded-full font-bold animate-pulse">
-                  {formatTime(timeLeft)}
-                </div>
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-6 py-6">
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">30min</div>
+                <div className="text-sm text-orange-200">Entrega Rápida</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">10k+</div>
+                <div className="text-sm text-orange-200">Clientes Felizes</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">4.9★</div>
+                <div className="text-sm text-orange-200">Avaliação</div>
               </div>
             </div>
 
-            <p className="text-xl mb-8 text-orange-100 leading-relaxed">
-              Ingredientes frescos, massa artesanal e sabores únicos. 
-              Entregamos felicidade na sua porta em até 30 minutos!
-            </p>
-
-            {/* Live visitor counter */}
-            <div className="mb-8">
-              <LiveVisitorCounter />
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                size="lg" 
+                onClick={scrollToMenu}
+                className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-lg px-8 py-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+              >
+                🍕 Ver Cardápio Completo
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white hover:text-orange-600 text-lg px-8 py-4 font-semibold"
+              >
+                📞 (11) 99999-9999
+              </Button>
             </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link
-                to="/menu"
-                className="bg-white text-orange-500 px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-50 transition-all duration-300 inline-flex items-center justify-center group hover:scale-105 hover:shadow-2xl"
-              >
-                Ver Cardápio
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <a
-                href="https://wa.me/5511999999999"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-orange-500 transition-all duration-300 inline-flex items-center justify-center hover:scale-105"
-              >
-                <MapPin className="mr-2 w-5 h-5" />
-                WhatsApp Direto
-              </a>
+
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap items-center gap-6 pt-4">
+              <div className="flex items-center space-x-2 text-orange-200">
+                <Clock className="w-5 h-5" />
+                <span className="text-sm">Entrega em até 30min</span>
+              </div>
+              <div className="flex items-center space-x-2 text-orange-200">
+                <Truck className="w-5 h-5" />
+                <span className="text-sm">Frete grátis acima de R$ 50</span>
+              </div>
+              <div className="flex items-center space-x-2 text-orange-200">
+                <Shield className="w-5 h-5" />
+                <span className="text-sm">Satisfação garantida</span>
+              </div>
             </div>
           </div>
-          
-          <div className="relative animate-scale-in">
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-300 to-yellow-300 rounded-full opacity-20 blur-3xl animate-pulse"></div>
-            <img 
-              src="/lovable-uploads/5f13c750-242a-42a7-9fa5-c4f873116f03.png" 
-              alt="Forno Nobre Logo"
-              className="relative z-10 w-64 h-64 mx-auto object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-500"
-              loading="eager"
-            />
+
+          {/* Hero Image */}
+          <div className="relative">
+            <div className="relative z-10">
+              <img
+                src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=600&fit=crop&crop=center"
+                alt="Pizza deliciosa"
+                className="w-full h-auto rounded-2xl shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-300"
+              />
+              
+              {/* Floating Badge */}
+              <div className="absolute -top-4 -left-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg animate-bounce">
+                🔥 Mais Pedida!
+              </div>
+              
+              {/* Price Badge */}
+              <div className="absolute -bottom-4 -right-4 bg-green-500 text-white px-6 py-3 rounded-full font-bold shadow-lg">
+                A partir de R$ 32,90
+              </div>
+            </div>
+            
+            {/* Background Decoration */}
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl transform rotate-6 scale-105 opacity-20"></div>
           </div>
         </div>
       </div>
-    </section>
+
+      {/* Bottom Wave */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+        <svg className="relative block w-full h-12" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" className="fill-white"></path>
+        </svg>
+      </div>
+    </div>
   );
 };
 
