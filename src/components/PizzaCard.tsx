@@ -23,7 +23,22 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
   const [showRating, setShowRating] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-  const pizza = { id, name, description, price, image, rating, category: '', ingredients: [] };
+  const pizza = { 
+    id, 
+    name, 
+    description, 
+    price, 
+    basePrice: price, // Use price as basePrice
+    image, 
+    rating, 
+    category: '', 
+    ingredients: [],
+    sizes: {
+      small: { name: 'Pequena (25cm)', price: price * 0.8, slices: 4 },
+      medium: { name: 'Média (30cm)', price: price, slices: 6 },
+      large: { name: 'Grande (35cm)', price: price * 1.3, slices: 8 }
+    }
+  };
 
   // Mock data for enhanced features
   const images = [image, image, image]; // Multiple angles/views
