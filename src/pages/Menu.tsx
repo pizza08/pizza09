@@ -2,6 +2,10 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import PizzaCard from '../components/PizzaCard';
+import DeliveryCalculator from '../components/DeliveryCalculator';
+import OrderScheduler from '../components/OrderScheduler';
+import DeliveryAreaMap from '../components/DeliveryAreaMap';
+import SavedAddresses from '../components/SavedAddresses';
 import { pizzas, categories } from '../data/pizzas';
 import { useCart } from '../contexts/CartContext';
 
@@ -28,6 +32,30 @@ const Menu = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Nosso Cardápio</h1>
           <p className="text-xl text-gray-600">Escolha sua pizza favorita e personalize como quiser</p>
+        </div>
+
+        {/* Funcionalidades de Entrega */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <DeliveryCalculator />
+            <OrderScheduler />
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <SavedAddresses />
+            <div className="bg-white rounded-lg p-6 shadow-lg">
+              <h3 className="text-lg font-semibold mb-4">Informações de Entrega</h3>
+              <div className="space-y-3">
+                <DeliveryAreaMap />
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p>• Pedido mínimo: R$ 25,00</p>
+                  <p>• Frete grátis acima de R$ 40,00</p>
+                  <p>• Funcionamento: 18h às 23h</p>
+                  <p>• Formas de pagamento: Cartão, PIX, Dinheiro</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Search Bar */}
