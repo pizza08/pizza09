@@ -48,8 +48,8 @@ export const CartLoadingSpinner = () => (
   </div>
 );
 
-export const ButtonLoading = ({ children, isLoading }: { children: React.ReactNode; isLoading: boolean }) => (
-  <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium inline-flex items-center justify-center min-w-[120px]" disabled={isLoading}>
+export const ButtonLoading = ({ children, isLoading, className = "" }: { children: React.ReactNode; isLoading: boolean; className?: string }) => (
+  <button className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium inline-flex items-center justify-center min-w-[120px] ${className}`} disabled={isLoading}>
     {isLoading ? (
       <>
         <Loader2 className="w-4 h-4 animate-spin mr-2" />
