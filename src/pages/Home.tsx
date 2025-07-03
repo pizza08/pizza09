@@ -5,6 +5,7 @@ import ValueProposition from '../components/ValueProposition';
 import SmartMenuPreview from '../components/SmartMenuPreview';
 import SocialProofSection from '../components/SocialProofSection';
 import PracticalInfo from '../components/PracticalInfo';
+import LiveNotifications from '../components/LiveNotifications';
 
 const Home = () => {
   return (
@@ -14,6 +15,7 @@ const Home = () => {
       <SmartMenuPreview />
       <SocialProofSection />
       <PracticalInfo />
+      <LiveNotifications />
     </div>
   );
 };
