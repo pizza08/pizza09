@@ -3,6 +3,9 @@ import React, { useState, useMemo } from 'react';
 import PizzaCard from '../components/PizzaCard';
 import NotificationBanner from '../components/NotificationBanner';
 import MobileSearchBar from '../components/MobileSearchBar';
+import ComboSection from '../components/ComboSection';
+import RecommendationEngine from '../components/RecommendationEngine';
+import GamificationSystem from '../components/GamificationSystem';
 import { MenuLoadingSkeleton } from '../components/LoadingStates';
 import { pizzas } from '../data/pizzas';
 import { useCart } from '../contexts/CartContext';
@@ -10,11 +13,12 @@ import { useIsMobile } from '../hooks/use-mobile';
 import { Search } from 'lucide-react';
 
 const Menu = () => {
-  const { dispatch } = useCart();
+  const { dispatch, state } = useCart();
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todas');
   const [isLoading, setIsLoading] = useState(true);
+  const [showGamification, setShowGamification] = useState(false);
 
   // Simular carregamento inicial
   React.useEffect(() => {
@@ -62,7 +66,27 @@ const Menu = () => {
         <p className="text-xl text-gray-600">
           Sabores únicos preparados com ingredientes frescos
         </p>
+        
+        {/* Gamification Toggle */}
+        <div className="mt-4">
+          <button
+            onClick={() => setShowGamification(!showGamification)}
+            className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full transition-colors"
+          >
+            {showGamification ? 'Ocultar' : 'Ver'} Meu Progresso 🏆
+          </button>
+        </div>
       </div>
+
+      {/* Gamification System */}
+      {showGamification && (
+        <div className="mb-12">
+          <GamificationSystem />
+        </div>
+      )}
+
+      {/* Combos Section */}
+      <ComboSection />
 
       {/* Search and Filters */}
       {isMobile ? (
@@ -135,6 +159,12 @@ const Menu = () => {
           </button>
         </div>
       )}
+
+      {/* Recommendations */}
+      <RecommendationEngine 
+        cartItems={state.items}
+        className="mt-12"
+      />
     </div>
   );
 };

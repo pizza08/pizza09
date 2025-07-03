@@ -4,7 +4,8 @@ import { Plus, Star } from 'lucide-react';
 import PizzaCustomizationModal from './PizzaCustomizationModal';
 import RatingSystem from './RatingSystem';
 import SocialShare from './SocialShare';
-import ImageWithFallback from './ImageWithFallback';
+import ImageGallery from './ImageGallery';
+import UrgencyBadges from './UrgencyBadges';
 import { ButtonLoading } from './LoadingStates';
 
 interface PizzaCardProps {
@@ -23,6 +24,13 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const pizza = { id, name, description, price, image, rating, category: '', ingredients: [] };
+
+  // Mock data for enhanced features
+  const images = [image, image, image]; // Multiple angles/views
+  const isBestseller = rating >= 4.5;
+  const isLimited = Math.random() > 0.7;
+  const lastUnits = isLimited ? Math.floor(Math.random() * 5) + 1 : null;
+  const isTrending = Math.random() > 0.8;
 
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -51,12 +59,22 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
     <>
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
         <div className="relative" onClick={() => setIsModalOpen(true)}>
-          <ImageWithFallback
-            src={image}
+          {/* Enhanced Image Gallery */}
+          <ImageGallery
+            images={images}
             alt={name}
             className="w-full h-48 object-cover cursor-pointer"
-            fallbackClassName="w-full h-48"
           />
+          
+          {/* Urgency Badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-2">
+            {isBestseller && <UrgencyBadges type="bestseller" />}
+            {isTrending && <UrgencyBadges type="trending" />}
+            {isLimited && <UrgencyBadges type="limited" />}
+            {lastUnits && <UrgencyBadges type="lastunits" value={lastUnits} />}
+          </div>
+          
+          {/* Rating Badge */}
           <div className="absolute top-3 right-3 bg-white rounded-full px-2 py-1 flex items-center space-x-1">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
             <span className="text-sm font-medium">{rating}</span>
@@ -72,9 +90,16 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">A partir de</span>
-              <span className="text-2xl font-bold text-orange-500">
-                R$ {(price * 0.8).toFixed(2).replace('.', ',')}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-orange-500">
+                  R$ {(price * 0.8).toFixed(2).replace('.', ',')}
+                </span>
+                {isLimited && (
+                  <span className="text-sm line-through text-gray-400">
+                    R$ {price.toFixed(2).replace('.', ',')}
+                  </span>
+                )}
+              </div>
             </div>
             
             <div className="flex space-x-2">
@@ -100,7 +125,7 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
             </div>
           </div>
 
-          {/* Ações sociais e avaliação */}
+          {/* Enhanced Social Actions */}
           <div className="flex flex-col sm:flex-row gap-3 pt-3 border-t border-gray-100">
             <div className="flex-1">
               <SocialShare 
