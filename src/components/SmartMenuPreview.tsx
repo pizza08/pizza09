@@ -37,13 +37,13 @@ const SmartMenuPreview = () => {
   const filteredPizzas = getFilteredPizzas();
 
   return (
-    <section className="py-16 bg-white">
+    <section id="menu-section" className="py-16 bg-white">
       <div className="container mx-auto px-4">
         {/* Header with urgency */}
         <div className="text-center mb-8 animate-fade-in">
           <div className="inline-flex items-center bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-semibold mb-4 animate-bounce-gentle">
             <Clock className="w-4 h-4 mr-2" />
-            Últimas 12 pizzas com desconto especial - Apenas hoje!
+            Últimas 5 pizzas com 45% OFF - Promoção válida por tempo limitado!
           </div>
           
           <h2 className="text-4xl font-bold text-gray-800 mb-4 font-serif">Cardápio Especial</h2>
@@ -70,23 +70,23 @@ const SmartMenuPreview = () => {
           </div>
         </div>
 
-        {/* Live Stats */}
+        {/* Enhanced Live Stats */}
         <div className="bg-gradient-to-r from-orange-500 to-yellow-400 rounded-2xl p-6 mb-8 text-white animate-glow">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div className="hover:scale-105 transition-transform duration-300">
-              <div className="text-2xl font-bold">🔥 127</div>
+              <div className="text-2xl font-bold">🔥 157</div>
               <div className="text-sm opacity-90">Vendidas hoje</div>
             </div>
             <div className="hover:scale-105 transition-transform duration-300">
-              <div className="text-2xl font-bold">⚡ 8min</div>
+              <div className="text-2xl font-bold">⚡ 12min</div>
               <div className="text-sm opacity-90">Tempo preparo</div>
             </div>
             <div className="hover:scale-105 transition-transform duration-300">
-              <div className="text-2xl font-bold">🚚 3</div>
+              <div className="text-2xl font-bold">🚚 7</div>
               <div className="text-sm opacity-90">Saindo agora</div>
             </div>
             <div className="hover:scale-105 transition-transform duration-300">
-              <div className="text-2xl font-bold">👥 15</div>
+              <div className="text-2xl font-bold">👥 89</div>
               <div className="text-sm opacity-90">Pessoas vendo</div>
             </div>
           </div>
@@ -113,7 +113,7 @@ const SmartMenuPreview = () => {
           ))}
         </div>
 
-        {/* CTA Section */}
+        {/* Enhanced CTA Section */}
         <div className="text-center bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 animate-fade-in">
           <h3 className="text-2xl font-bold text-gray-800 mb-4 font-serif">
             Mais de 30 Sabores Disponíveis
@@ -132,12 +132,12 @@ const SmartMenuPreview = () => {
             </Link>
             
             <a
-              href="https://wa.me/5511999999999?text=Olá! Gostaria de fazer um pedido"
+              href="https://wa.me/5511999999999?text=Olá! Gostaria de fazer um pedido com 45% OFF!"
               target="_blank"
               rel="noopener noreferrer"
               className="border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105"
             >
-              Pedido via WhatsApp
+              Pedido via WhatsApp - 45% OFF
             </a>
           </div>
         </div>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from './ui/button';
-import { ArrowRight, Clock, Truck, Shield } from 'lucide-react';
+import { ArrowRight, Clock, Truck, Shield, Star } from 'lucide-react';
 
 const HeroSection = () => {
   const scrollToMenu = () => {
@@ -22,9 +22,9 @@ const HeroSection = () => {
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium">
+              <div className="inline-flex items-center space-x-2 bg-red-600 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-bold animate-pulse">
                 <Shield className="w-4 h-4" />
-                <span>🔥 ÚLTIMAS 3 PIZZAS COM 40% OFF!</span>
+                <span>🚨 ÚLTIMAS 5 PIZZAS COM 45% OFF - APENAS HOJE!</span>
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
@@ -36,41 +36,50 @@ const HeroSection = () => {
                 🍕 Massa fermentada 24h • Ingredientes importados • Forno à lenha
               </p>
               
-              <p className="text-lg text-orange-200 max-w-lg">
-                <strong>ATENÇÃO:</strong> Apenas 3 pizzas restantes com desconto de 40%! 
-                Mais de 15 mil clientes já provaram e se apaixonaram. 
-                Não perca essa oportunidade única!
-              </p>
+              <div className="bg-red-600/30 backdrop-blur-sm rounded-xl p-4 border border-red-400/50">
+                <p className="text-lg text-white font-bold">
+                  ⚠️ <strong>ATENÇÃO:</strong> Apenas 5 pizzas restantes com desconto de 45%!
+                </p>
+                <p className="text-orange-200 mt-2">
+                  Mais de 15.247 clientes já provaram. 89 pessoas visualizando agora.
+                  <strong className="text-yellow-300"> Não perca essa oportunidade única!</strong>
+                </p>
+              </div>
             </div>
 
             {/* Urgency Stats */}
             <div className="grid grid-cols-3 gap-6 py-6 border-y border-white/20">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">15min</div>
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">12min</div>
                 <div className="text-sm text-orange-200">Entrega Expressa</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">15k+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">15.2k+</div>
                 <div className="text-sm text-orange-200">Clientes Satisfeitos</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">4.9★</div>
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300 flex items-center justify-center">
+                  4.9 <Star className="w-5 h-5 ml-1 fill-current" />
+                </div>
                 <div className="text-sm text-orange-200">Avaliação Perfeita</div>
               </div>
             </div>
 
-            {/* Social Proof */}
+            {/* Enhanced Social Proof */}
             <div className="bg-red-500/20 backdrop-blur-sm rounded-xl p-4 mb-6 border border-red-400/30">
               <div className="flex items-center space-x-3">
                 <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-yellow-400 border-2 border-white"></div>
-                  <div className="w-8 h-8 rounded-full bg-green-400 border-2 border-white"></div>
-                  <div className="w-8 h-8 rounded-full bg-blue-400 border-2 border-white"></div>
+                  <div className="w-8 h-8 rounded-full bg-yellow-400 border-2 border-white flex items-center justify-center text-xs">😋</div>
+                  <div className="w-8 h-8 rounded-full bg-green-400 border-2 border-white flex items-center justify-center text-xs">🤤</div>
+                  <div className="w-8 h-8 rounded-full bg-blue-400 border-2 border-white flex items-center justify-center text-xs">😍</div>
+                  <div className="w-8 h-8 rounded-full bg-purple-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">+85</div>
                 </div>
                 <div className="text-sm">
-                  <strong className="text-yellow-300">APENAS 3 PIZZAS RESTANTES</strong> com 40% OFF!
+                  <strong className="text-yellow-300">APENAS 5 PIZZAS RESTANTES</strong> com 45% OFF!
                   <br />
-                  <span className="text-orange-200">+89 pessoas visualizando agora</span>
+                  <span className="text-orange-200">
+                    <strong>89 pessoas</strong> visualizando • <strong>12 pedidos</strong> na última hora
+                  </span>
                 </div>
               </div>
             </div>
@@ -82,7 +91,7 @@ const HeroSection = () => {
                 onClick={scrollToMenu}
                 className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-lg px-8 py-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200 animate-pulse"
               >
-                🍕 GARANTIR MINHA PIZZA - 40% OFF
+                🍕 GARANTIR PIZZA - 45% OFF
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               
@@ -99,11 +108,11 @@ const HeroSection = () => {
             <div className="flex flex-wrap items-center gap-6 pt-4">
               <div className="flex items-center space-x-2 text-orange-200">
                 <Clock className="w-5 h-5" />
-                <span className="text-sm">Entrega em até 15min</span>
+                <span className="text-sm">Entrega em até 12min</span>
               </div>
               <div className="flex items-center space-x-2 text-orange-200">
                 <Truck className="w-5 h-5" />
-                <span className="text-sm">Frete grátis acima de R$ 35</span>
+                <span className="text-sm">Frete grátis acima de R$ 30</span>
               </div>
               <div className="flex items-center space-x-2 text-orange-200">
                 <Shield className="w-5 h-5" />
@@ -123,13 +132,23 @@ const HeroSection = () => {
               
               {/* Floating Badge */}
               <div className="absolute -top-4 -left-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg animate-bounce">
-                🔥 ÚLTIMAS 3!
+                🔥 SÓ 5 RESTAM!
               </div>
               
               {/* Price Badge */}
               <div className="absolute -bottom-4 -right-4 bg-green-500 text-white px-6 py-3 rounded-full font-bold shadow-lg">
-                <div className="text-xs line-through opacity-75">R$ 48,90</div>
-                <div>R$ 29,34</div>
+                <div className="text-xs line-through opacity-75">R$ 52,90</div>
+                <div>R$ 29,10</div>
+                <div className="text-xs">45% OFF</div>
+              </div>
+
+              {/* Reviews Badge */}
+              <div className="absolute top-4 right-4 bg-white text-gray-800 px-3 py-2 rounded-full shadow-lg">
+                <div className="flex items-center space-x-1">
+                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                  <span className="text-sm font-bold">4.9</span>
+                </div>
+                <div className="text-xs text-gray-600">2.847 reviews</div>
               </div>
             </div>
             
