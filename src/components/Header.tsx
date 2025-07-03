@@ -1,30 +1,21 @@
-
 import React, { useState } from 'react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 interface HeaderProps {
   cartItemCount?: number;
 }
-
 const Header = ({
   cartItemCount = 0
 }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <header className="bg-white shadow-lg sticky top-0 z-50">
+  return <header className="bg-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 hover:scale-105 transition-transform">
             <div className="relative">
-              <img 
-                src="/lovable-uploads/5f13c750-242a-42a7-9fa5-c4f873116f03.png" 
-                alt="Forno Nobre Logo" 
-                className="w-12 h-12 object-contain"
-              />
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white"></div>
+              <img src="/lovable-uploads/5f13c750-242a-42a7-9fa5-c4f873116f03.png" alt="Forno Nobre Logo" className="w-12 h-12 object-contain" />
+              
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Forno Nobre</h1>
@@ -82,8 +73,6 @@ const Header = ({
             </div>
           </nav>}
       </div>
-    </header>
-  );
+    </header>;
 };
-
 export default Header;
