@@ -33,8 +33,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-4 h-4 text-orange-400" />
-                <span className="text-gray-300">📍 Shopping Balneário – Piso Térreo
-Av. Santa Catarina, 1 – Balneário Camboriú/</span>
+                <span className="text-gray-300">📍 Shopping Balneário – Piso Térreo Av. Santa Catarina, 1 – Balneário Camboriú</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Clock className="w-4 h-4 text-orange-400" />
