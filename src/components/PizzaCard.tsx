@@ -1,12 +1,7 @@
 
 import React, { useState } from 'react';
-import { Plus, Star } from 'lucide-react';
+import { Plus, Star, Clock } from 'lucide-react';
 import PizzaCustomizationModal from './PizzaCustomizationModal';
-import RatingSystem from './RatingSystem';
-import SocialShare from './SocialShare';
-import ImageGallery from './ImageGallery';
-import UrgencyBadges from './UrgencyBadges';
-import StockCounter from './StockCounter';
 import { ButtonLoading } from './LoadingStates';
 
 interface PizzaCardProps {
@@ -21,7 +16,6 @@ interface PizzaCardProps {
 
 const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }: PizzaCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showRating, setShowRating] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const pizza = { 
@@ -29,7 +23,7 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
     name, 
     description, 
     price, 
-    basePrice: price, // Use price as basePrice
+    basePrice: price,
     image, 
     rating, 
     category: '', 
@@ -41,24 +35,22 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
     }
   };
 
-  // Mock data for enhanced features
-  const images = [image, image, image]; // Multiple angles/views
-  const isBestseller = rating >= 4.5;
-  const isLimited = Math.random() > 0.7;
-  const lastUnits = isLimited ? Math.floor(Math.random() * 5) + 1 : null;
-  const isTrending = Math.random() > 0.8;
+  // Mostrar desconto real baseado no tamanho
+  const hasPromotion = Math.random() > 0.6; // 40% das pizzas em promoção
+  const discountPercent = hasPromotion ? 15 : 0;
+  const originalPrice = price;
+  const finalPrice = hasPromotion ? price * 0.85 : price;
 
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsAddingToCart(true);
     
-    // Simular delay da operação
     await new Promise(resolve => setTimeout(resolve, 800));
     
     onAddToCart({
       id,
       name: `${name} (Média)`,
-      price,
+      price: finalPrice,
       image,
       quantity: 1
     });
@@ -66,112 +58,91 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
     setIsAddingToCart(false);
   };
 
-  const handleRatingSubmitted = (ratingValue: number, comment: string) => {
-    console.log(`Pizza ${name} avaliada com ${ratingValue} estrelas: ${comment}`);
-    // Aqui você implementaria a lógica para salvar a avaliação
-  };
-
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative">
+        {/* Badge de Promoção */}
+        {hasPromotion && (
+          <div className="absolute top-3 left-3 z-10">
+            <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+              -{discountPercent}%
+            </div>
+          </div>
+        )}
+
+        {/* Imagem */}
         <div className="relative" onClick={() => setIsModalOpen(true)}>
-          {/* Enhanced Image Gallery */}
-          <ImageGallery
-            images={images}
+          <img 
+            src={image} 
             alt={name}
             className="w-full h-48 object-cover cursor-pointer"
           />
           
-          {/* Urgency Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {isBestseller && <UrgencyBadges type="bestseller" />}
-            {isTrending && <UrgencyBadges type="trending" />}
-            {isLimited && <UrgencyBadges type="limited" />}
-            {lastUnits && <UrgencyBadges type="lastunits" value={lastUnits} />}
-          </div>
-          
-          {/* Rating Badge */}
-          <div className="absolute top-3 right-3 bg-white rounded-full px-2 py-1 flex items-center space-x-1">
+          {/* Rating Badge - Simplificado */}
+          <div className="absolute top-3 right-3 bg-white rounded-full px-2 py-1 flex items-center space-x-1 shadow-sm">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
             <span className="text-sm font-medium">{rating}</span>
           </div>
         </div>
         
-          <div className="p-5">
+        <div className="p-5">
           <div onClick={() => setIsModalOpen(true)} className="cursor-pointer">
             <h3 className="text-xl font-bold text-gray-800 mb-2">{name}</h3>
-            <p className="text-gray-600 text-sm mb-3 line-clamp-2">{description}</p>
-            
-            {/* Stock Counter */}
-            <div className="mb-3">
-              <StockCounter productName={name} className="text-xs" />
-            </div>
+            <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
           </div>
           
-          <div className="flex items-center justify-between mb-4">
+          {/* Preço e CTA - Otimizado para Conversão */}
+          <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-xs text-muted-foreground">A partir de</span>
               <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-primary">
-                  R$ {(price * 0.8).toFixed(2).replace('.', ',')}
+                <span className="text-2xl font-bold text-orange-600">
+                  R$ {(finalPrice * 0.8).toFixed(2).replace('.', ',')}
                 </span>
-                {isLimited && (
+                {hasPromotion && (
                   <span className="text-sm line-through text-muted-foreground">
-                    R$ {price.toFixed(2).replace('.', ',')}
+                    R$ {(originalPrice * 0.8).toFixed(2).replace('.', ',')}
                   </span>
                 )}
               </div>
-              <span className="text-xs text-success font-medium">Entrega em 25-35min</span>
+              <div className="flex items-center gap-1 text-xs text-green-600 font-medium">
+                <Clock className="w-3 h-3" />
+                <span>Entrega 25-35min</span>
+              </div>
             </div>
             
-            <div className="flex space-x-2">
+            {/* Botões de Ação - Focados */}
+            <div className="flex flex-col gap-2">
               {isAddingToCart ? (
-                <ButtonLoading isLoading={true}>Adicionando...</ButtonLoading>
+                <ButtonLoading isLoading={true} className="text-xs px-4 py-2">
+                  Adicionando...
+                </ButtonLoading>
               ) : (
                 <>
                   <button
                     onClick={handleQuickAdd}
-                    className="bg-secondary/10 hover:bg-secondary/20 text-secondary p-2 rounded-full transition-colors border border-secondary/20"
-                    title="Adicionar tamanho médio"
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-semibold text-sm flex items-center gap-1"
                   >
                     <Plus className="w-4 h-4" />
+                    Adicionar
                   </button>
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-full transition-colors font-semibold text-sm"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded-full transition-colors text-xs"
                   >
-                    Pedir Agora
+                    Personalizar
                   </button>
                 </>
               )}
             </div>
           </div>
 
-          {/* Enhanced Social Actions */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-3 border-t border-gray-100">
-            <div className="flex-1">
-              <SocialShare 
-                pizzaName={name}
-                pizzaImage={image}
-                pizzaPrice={price}
-              />
-            </div>
-            <button
-              onClick={() => setShowRating(!showRating)}
-              className="text-orange-500 hover:text-orange-600 text-sm font-medium transition-colors"
-            >
-              {showRating ? 'Ocultar Avaliação' : 'Avaliar Pizza'}
-            </button>
-          </div>
-
-          {/* Sistema de avaliação */}
-          {showRating && (
-            <div className="mt-4">
-              <RatingSystem
-                pizzaId={id}
-                pizzaName={name}
-                onRatingSubmitted={handleRatingSubmitted}
-              />
+          {/* Frete Grátis Indicator */}
+          {finalPrice >= 40 && (
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium text-center">
+                🚚 Frete GRÁTIS nesta pizza!
+              </div>
             </div>
           )}
         </div>
