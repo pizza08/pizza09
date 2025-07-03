@@ -22,7 +22,7 @@ const Header = ({
               <img 
                 src="/lovable-uploads/5f13c750-242a-42a7-9fa5-c4f873116f03.png" 
                 alt="Forno Nobre Logo" 
-                className="w-8 h-8 object-contain"
+                className="w-12 h-12 object-contain"
               />
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white"></div>
             </div>
