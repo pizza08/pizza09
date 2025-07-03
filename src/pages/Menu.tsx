@@ -71,7 +71,7 @@ const Menu = () => {
           onSearchChange={setSearchTerm}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
-          categories={categories}
+          categories={categories.map(cat => cat.name)}
         />
       ) : (
         <div className="mb-8">
