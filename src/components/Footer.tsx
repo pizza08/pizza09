@@ -1,15 +1,12 @@
-
 import React from 'react';
 import { Phone, MapPin, Clock, Instagram, Facebook, Twitter } from 'lucide-react';
-
 const Footer = () => {
-  return (
-    <footer className="bg-gray-900 text-white">
+  return <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-bold mb-4 text-orange-400">Pizza Royal</h3>
+            <h3 className="text-xl font-bold mb-4 text-orange-400">Forno Nobre</h3>
             <p className="text-gray-300 mb-4">
               A melhor pizza da cidade, feita com ingredientes frescos e muito amor.
             </p>
@@ -79,11 +76,7 @@ const Footer = () => {
               Receba nossas promoções e novidades!
             </p>
             <div className="flex">
-              <input
-                type="email"
-                placeholder="Seu e-mail"
-                className="flex-1 px-3 py-2 bg-gray-800 text-white rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-              />
+              <input type="email" placeholder="Seu e-mail" className="flex-1 px-3 py-2 bg-gray-800 text-white rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-400" />
               <button className="px-4 py-2 bg-orange-500 hover:bg-orange-600 transition-colors rounded-r-lg">
                 OK
               </button>
@@ -97,8 +90,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
