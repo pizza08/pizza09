@@ -8,7 +8,8 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Separator } from '../components/ui/separator';
 import PaymentMethods from '../components/PaymentMethods';
-import { ArrowLeft, MapPin, CreditCard, CheckCircle } from 'lucide-react';
+import AddressAutocomplete from '../components/AddressAutocomplete';
+import { ArrowLeft, MapPin, CreditCard, CheckCircle, Clock } from 'lucide-react';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -18,11 +19,12 @@ const Checkout = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    email: '',
     address: '',
     notes: '',
     paymentMethod: ''
   });
+  
+  const [deliveryTime, setDeliveryTime] = useState('15-20 min');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -76,7 +78,7 @@ const Checkout = () => {
     const orderData = {
       customerName: formData.name,
       customerPhone: formData.phone,
-      customerEmail: formData.email || undefined,
+      customerEmail: undefined,
       deliveryAddress: formData.address,
       paymentMethod: formData.paymentMethod,
       notes: formData.notes || undefined,
@@ -167,29 +169,24 @@ const Checkout = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  E-mail (opcional)
-                </label>
-                <Input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="seu@email.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Endereço Completo *
                 </label>
-                <Textarea
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                  placeholder="Rua, número, bairro, cidade..."
+                <AddressAutocomplete
+                  onAddressSelect={(address, time) => {
+                    handleInputChange('address', address);
+                    setDeliveryTime(time);
+                  }}
                   className={errors.address ? 'border-red-500' : ''}
-                  rows={3}
                 />
                 {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                
+                {/* Tempo de entrega */}
+                <div className="mt-2 flex items-center text-sm text-green-600">
+                  <Clock className="w-4 h-4 mr-1" />
+                  Tempo estimado: {deliveryTime}
+                </div>
               </div>
+
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

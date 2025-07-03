@@ -47,7 +47,7 @@ const SmartMenuPreview = () => {
           </div>
           
           <h2 className="text-4xl font-bold text-gray-800 mb-4 font-serif">Cardápio Especial</h2>
-          <p className="text-xl text-gray-600">As pizzas que mais fazem sucesso na nossa cidade</p>
+          <p className="text-xl text-gray-600">10 Tradicionais + 8 Doces Gourmet • Preços a partir de R$ 25</p>
         </div>
 
         {/* Smart Filters */}

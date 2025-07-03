@@ -9,6 +9,8 @@ import LiveNotifications from '../components/LiveNotifications';
 import LiveActivityFeed from '../components/LiveActivityFeed';
 import UrgencyTimer from '../components/UrgencyTimer';
 import ExitIntentPopup from '../components/ExitIntentPopup';
+import ReviewsCarousel from '../components/ReviewsCarousel';
+import TrustSignals from '../components/TrustSignals';
 import { useExitIntent } from '../hooks/useExitIntent';
 import { useToast } from '../hooks/use-toast';
 
@@ -33,7 +35,6 @@ const Home = () => {
   return (
     <div className="relative">
       <HeroSection />
-      <ValueProposition />
       
       {/* Timer de urgência global - mais prominente */}
       <div className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 py-3 sticky top-0 z-40 shadow-lg">
@@ -42,7 +43,10 @@ const Home = () => {
         </div>
       </div>
       
+      <TrustSignals />
+      <ValueProposition />
       <SmartMenuPreview />
+      <ReviewsCarousel />
       <SocialProofSection />
       <PracticalInfo />
       

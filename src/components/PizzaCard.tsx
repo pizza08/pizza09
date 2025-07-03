@@ -6,6 +6,7 @@ import RatingSystem from './RatingSystem';
 import SocialShare from './SocialShare';
 import ImageGallery from './ImageGallery';
 import UrgencyBadges from './UrgencyBadges';
+import StockCounter from './StockCounter';
 import { ButtonLoading } from './LoadingStates';
 
 interface PizzaCardProps {
@@ -96,10 +97,15 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
           </div>
         </div>
         
-        <div className="p-5">
+          <div className="p-5">
           <div onClick={() => setIsModalOpen(true)} className="cursor-pointer">
             <h3 className="text-xl font-bold text-gray-800 mb-2">{name}</h3>
-            <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
+            <p className="text-gray-600 text-sm mb-3 line-clamp-2">{description}</p>
+            
+            {/* Stock Counter */}
+            <div className="mb-3">
+              <StockCounter productName={name} className="text-xs" />
+            </div>
           </div>
           
           <div className="flex items-center justify-between mb-4">

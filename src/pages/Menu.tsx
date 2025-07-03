@@ -34,17 +34,18 @@ const Menu = () => {
 
   const categories = [
     { id: 'todas', name: 'Todas', count: pizzas.length },
-    { id: 'tradicional', name: 'Tradicionais', count: pizzas.filter(p => p.category === 'tradicional').length },
-    { id: 'especial', name: 'Especiais', count: pizzas.filter(p => p.category === 'especial').length },
-    { id: 'doce', name: 'Doces', count: pizzas.filter(p => p.category === 'doce').length },
-    { id: 'vegana', name: 'Veganas', count: pizzas.filter(p => p.category === 'vegana').length }
+    { id: 'tradicionais', name: 'Tradicionais', count: pizzas.filter(p => p.category === 'Tradicionais').length },
+    { id: 'doces', name: 'Doces', count: pizzas.filter(p => p.category === 'Doces').length }
   ];
 
   const filteredPizzas = useMemo(() => {
     return pizzas.filter(pizza => {
       const matchesSearch = pizza.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           pizza.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'todas' || pizza.category === selectedCategory;
+      const matchesCategory = selectedCategory === 'todas' || 
+                            pizza.category.toLowerCase() === selectedCategory.toLowerCase() ||
+                            (selectedCategory === 'tradicionais' && pizza.category === 'Tradicionais') ||
+                            (selectedCategory === 'doces' && pizza.category === 'Doces');
       
       return matchesSearch && matchesCategory;
     });
