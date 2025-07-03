@@ -22,7 +22,7 @@ const Header = ({
             <MapPin className="w-4 h-4" />
             <span>Frete GRÁTIS acima de R$ 50</span>
           </div>
-          <div className="font-semibold">📞 (47)99280-9169</div>
+          <div className="font-semibold">📞 (47) 99280-9169</div>
         </div>
       </div>
 
