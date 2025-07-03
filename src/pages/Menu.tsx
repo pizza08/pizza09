@@ -68,13 +68,13 @@ const Menu = () => {
           Sabores únicos preparados com ingredientes frescos
         </p>
         
-        {/* Gamification Toggle */}
+        {/* Simplified Progress - Hidden by default */}
         <div className="mt-4">
           <button
             onClick={() => setShowGamification(!showGamification)}
-            className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full transition-colors"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            {showGamification ? 'Ocultar' : 'Ver'} Meu Progresso 🏆
+            {showGamification ? 'Ocultar' : 'Ver'} Progresso 🏆
           </button>
         </div>
       </div>
@@ -86,8 +86,36 @@ const Menu = () => {
         </div>
       )}
 
-      {/* Combos Section */}
-      <ComboSection />
+      {/* Simplified Combos - Top 3 only */}
+      <div className="mb-8 bg-muted/30 rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-center mb-4">🔥 Combos Mais Pedidos</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="bg-background rounded-lg p-4 border border-primary/20">
+            <h3 className="font-semibold text-primary">Combo Família</h3>
+            <p className="text-sm text-muted-foreground mb-2">2 Pizzas G + 2 Refrigerantes</p>
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">R$ 89,90</span>
+              <span className="text-xs text-success">Economia de R$ 15</span>
+            </div>
+          </div>
+          <div className="bg-background rounded-lg p-4 border border-secondary/20">
+            <h3 className="font-semibold text-secondary">Combo Casal</h3>
+            <p className="text-sm text-muted-foreground mb-2">1 Pizza G + 2 Refrigerantes</p>
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">R$ 54,90</span>
+              <span className="text-xs text-success">Economia de R$ 8</span>
+            </div>
+          </div>
+          <div className="bg-background rounded-lg p-4 border border-accent/20">
+            <h3 className="font-semibold text-accent-foreground">Combo Individual</h3>
+            <p className="text-sm text-muted-foreground mb-2">1 Pizza M + 1 Refrigerante</p>
+            <div className="flex items-center justify-between">
+              <span className="text-lg font-bold">R$ 35,90</span>
+              <span className="text-xs text-success">Economia de R$ 5</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Search and Filters */}
       {isMobile ? (

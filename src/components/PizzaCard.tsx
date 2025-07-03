@@ -110,17 +110,18 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
           
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col">
-              <span className="text-sm text-gray-500">A partir de</span>
+              <span className="text-xs text-muted-foreground">A partir de</span>
               <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-orange-500">
+                <span className="text-2xl font-bold text-primary">
                   R$ {(price * 0.8).toFixed(2).replace('.', ',')}
                 </span>
                 {isLimited && (
-                  <span className="text-sm line-through text-gray-400">
+                  <span className="text-sm line-through text-muted-foreground">
                     R$ {price.toFixed(2).replace('.', ',')}
                   </span>
                 )}
               </div>
+              <span className="text-xs text-success font-medium">Entrega em 25-35min</span>
             </div>
             
             <div className="flex space-x-2">
@@ -130,16 +131,16 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
                 <>
                   <button
                     onClick={handleQuickAdd}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full transition-colors"
+                    className="bg-secondary/10 hover:bg-secondary/20 text-secondary p-2 rounded-full transition-colors border border-secondary/20"
                     title="Adicionar tamanho médio"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-full transition-colors font-semibold text-sm"
                   >
-                    Personalizar
+                    Pedir Agora
                   </button>
                 </>
               )}
