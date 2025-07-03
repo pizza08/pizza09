@@ -1,13 +1,25 @@
-
 import React, { useState } from 'react';
-import { CreditCard, MapPin, Clock, Check } from 'lucide-react';
+import { CreditCard, MapPin, Clock, Check, Percent } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
+import CouponSystem from '../components/CouponSystem';
+import LoyaltyProgram from '../components/LoyaltyProgram';
+import PaymentMethods from '../components/PaymentMethods';
+
+interface Coupon {
+  code: string;
+  discount: number;
+  type: 'percentage' | 'fixed';
+  minOrder: number;
+  description: string;
+}
 
 const Checkout = () => {
   const { state, dispatch } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [loyaltyDiscount, setLoyaltyDiscount] = useState({ points: 0, discount: 0 });
   const [formData, setFormData] = useState({
     // Delivery Info
     name: '',
@@ -32,8 +44,20 @@ const Checkout = () => {
 
   const deliveryFee = 5.99;
   const subtotal = state.total;
-  const total = subtotal + (subtotal >= 40 ? 0 : deliveryFee);
-  const isFreeDelivery = subtotal >= 40;
+  
+  // Calculate discounts
+  let couponDiscount = 0;
+  if (appliedCoupon) {
+    couponDiscount = appliedCoupon.type === 'percentage' 
+      ? (subtotal * appliedCoupon.discount) / 100
+      : appliedCoupon.discount;
+  }
+  
+  const pixDiscount = formData.paymentMethod === 'pix' && subtotal >= 50 ? subtotal * 0.05 : 0;
+  const totalDiscounts = couponDiscount + loyaltyDiscount.discount + pixDiscount;
+  const finalSubtotal = subtotal - totalDiscounts;
+  const total = finalSubtotal + (finalSubtotal >= 40 ? 0 : deliveryFee);
+  const isFreeDelivery = finalSubtotal >= 40;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -42,9 +66,17 @@ const Checkout = () => {
     });
   };
 
+  const handleCouponApplied = (coupon: Coupon | null) => {
+    setAppliedCoupon(coupon);
+  };
+
+  const handleLoyaltyPoints = (points: number, discount: number) => {
+    setLoyaltyDiscount({ points, discount });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (step < 3) {
+    if (step < 4) {
       setStep(step + 1);
     } else {
       // Process order
@@ -158,111 +190,118 @@ const Checkout = () => {
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-              <CreditCard className="w-6 h-6 mr-2 text-orange-500" />
-              Forma de Pagamento
+              <Percent className="w-6 h-6 mr-2 text-orange-500" />
+              Descontos e Benefícios
             </h2>
             
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Método de Pagamento
-                </label>
-                <select
-                  name="paymentMethod"
-                  value={formData.paymentMethod}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                >
-                  <option value="credit">Cartão de Crédito</option>
-                  <option value="debit">Cartão de Débito</option>
-                  <option value="pix">PIX</option>
-                  <option value="cash">Dinheiro na Entrega</option>
-                </select>
-              </div>
-              
-              {(formData.paymentMethod === 'credit' || formData.paymentMethod === 'debit') && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Número do Cartão *
-                    </label>
-                    <input
-                      type="text"
-                      name="cardNumber"
-                      value={formData.cardNumber}
-                      onChange={handleInputChange}
-                      placeholder="1234 5678 9012 3456"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nome no Cartão *
-                    </label>
-                    <input
-                      type="text"
-                      name="cardName"
-                      value={formData.cardName}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Validade *
-                      </label>
-                      <input
-                        type="text"
-                        name="expiryDate"
-                        value={formData.expiryDate}
-                        onChange={handleInputChange}
-                        placeholder="MM/AA"
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        CVV *
-                      </label>
-                      <input
-                        type="text"
-                        name="cvv"
-                        value={formData.cvv}
-                        onChange={handleInputChange}
-                        placeholder="123"
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Observações
-                </label>
-                <textarea
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleInputChange}
-                  rows={3}
-                  placeholder="Alguma observação especial?"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-            </div>
+            <CouponSystem 
+              onCouponApplied={handleCouponApplied}
+              orderTotal={subtotal}
+            />
+            
+            <LoyaltyProgram 
+              orderTotal={subtotal}
+              onPointsApplied={handleLoyaltyPoints}
+            />
           </div>
         );
         
       case 3:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+              <CreditCard className="w-6 h-6 mr-2 text-orange-500" />
+              Forma de Pagamento
+            </h2>
+            
+            <PaymentMethods 
+              selectedMethod={formData.paymentMethod}
+              onMethodSelect={(method) => setFormData({...formData, paymentMethod: method})}
+              orderTotal={subtotal}
+            />
+            
+            {(formData.paymentMethod === 'credit' || formData.paymentMethod === 'debit') && (
+              <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Número do Cartão *
+                  </label>
+                  <input
+                    type="text"
+                    name="cardNumber"
+                    value={formData.cardNumber}
+                    onChange={handleInputChange}
+                    placeholder="1234 5678 9012 3456"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nome no Cartão *
+                  </label>
+                  <input
+                    type="text"
+                    name="cardName"
+                    value={formData.cardName}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Validade *
+                    </label>
+                    <input
+                      type="text"
+                      name="expiryDate"
+                      value={formData.expiryDate}
+                      onChange={handleInputChange}
+                      placeholder="MM/AA"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      CVV *
+                    </label>
+                    <input
+                      type="text"
+                      name="cvv"
+                      value={formData.cvv}
+                      onChange={handleInputChange}
+                      placeholder="123"
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Observações
+              </label>
+              <textarea
+                name="notes"
+                value={formData.notes}
+                onChange={handleInputChange}
+                rows={3}
+                placeholder="Alguma observação especial?"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+          </div>
+        );
+        
+      case 4:
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center">
@@ -286,13 +325,37 @@ const Checkout = () => {
                   <span>Subtotal</span>
                   <span>R$ {subtotal.toFixed(2).replace('.', ',')}</span>
                 </div>
+                
+                {/* Show all discounts */}
+                {appliedCoupon && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Cupom {appliedCoupon.code}</span>
+                    <span>-R$ {couponDiscount.toFixed(2).replace('.', ',')}</span>
+                  </div>
+                )}
+                
+                {loyaltyDiscount.discount > 0 && (
+                  <div className="flex justify-between text-yellow-600">
+                    <span>Pontos de fidelidade ({loyaltyDiscount.points} pts)</span>
+                    <span>-R$ {loyaltyDiscount.discount.toFixed(2).replace('.', ',')}</span>
+                  </div>
+                )}
+                
+                {pixDiscount > 0 && (
+                  <div className="flex justify-between text-blue-600">
+                    <span>Desconto PIX (5%)</span>
+                    <span>-R$ {pixDiscount.toFixed(2).replace('.', ',')}</span>
+                  </div>
+                )}
+                
                 <div className="flex justify-between">
                   <span>Taxa de entrega</span>
                   <span className={isFreeDelivery ? 'text-green-600' : ''}>
                     {isFreeDelivery ? 'GRÁTIS' : `R$ ${deliveryFee.toFixed(2).replace('.', ',')}`}
                   </span>
                 </div>
-                <div className="flex justify-between font-bold text-lg">
+                
+                <div className="flex justify-between font-bold text-lg pt-2 border-t">
                   <span>Total</span>
                   <span>R$ {total.toFixed(2).replace('.', ',')}</span>
                 </div>
@@ -329,15 +392,15 @@ const Checkout = () => {
           {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex items-center justify-between">
-              {[1, 2, 3].map((stepNumber) => (
+              {[1, 2, 3, 4].map((stepNumber) => (
                 <div key={stepNumber} className="flex items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
                     step >= stepNumber ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-500'
                   }`}>
                     {stepNumber}
                   </div>
-                  {stepNumber < 3 && (
-                    <div className={`w-24 h-1 mx-4 ${
+                  {stepNumber < 4 && (
+                    <div className={`w-20 h-1 mx-2 ${
                       step > stepNumber ? 'bg-orange-500' : 'bg-gray-200'
                     }`} />
                   )}
@@ -346,6 +409,7 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between mt-2 text-sm text-gray-600">
               <span>Entrega</span>
+              <span>Descontos</span>
               <span>Pagamento</span>
               <span>Confirmação</span>
             </div>
@@ -371,10 +435,33 @@ const Checkout = () => {
                   type="submit"
                   className="px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-full font-bold transition-colors ml-auto"
                 >
-                  {step === 3 ? 'Confirmar Pedido' : 'Continuar'}
+                  {step === 4 ? 'Confirmar Pedido' : 'Continuar'}
                 </button>
               </div>
             </form>
+          </div>
+          
+          {/* Order Summary Sidebar */}
+          <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="font-semibold text-lg mb-4">Resumo Rápido</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span>R$ {subtotal.toFixed(2).replace('.', ',')}</span>
+              </div>
+              
+              {totalDiscounts > 0 && (
+                <div className="flex justify-between text-green-600">
+                  <span>Descontos:</span>
+                  <span>-R$ {totalDiscounts.toFixed(2).replace('.', ',')}</span>
+                </div>
+              )}
+              
+              <div className="flex justify-between text-lg font-bold pt-2 border-t">
+                <span>Total:</span>
+                <span>R$ {total.toFixed(2).replace('.', ',')}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
