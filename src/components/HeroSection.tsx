@@ -15,7 +15,7 @@ const HeroSection = () => {
     <div className="relative bg-gradient-to-br from-orange-600 via-orange-500 to-red-500 text-white overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-black/10"></div>
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"4\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
       
       <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-28">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -24,37 +24,51 @@ const HeroSection = () => {
             <div className="space-y-4">
               <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium">
                 <Shield className="w-4 h-4" />
-                <span>Entrega Garantida</span>
+                <span>🔥 Entrega Garantida em 25min</span>
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-                As Melhores Pizzas
-                <span className="block text-yellow-300">Direto na Sua Casa!</span>
+                <span className="block">Pizzas Artesanais</span>
+                <span className="block text-yellow-300">que Conquistam!</span>
               </h1>
               
               <p className="text-xl sm:text-2xl text-orange-100 font-medium">
-                🔥 Sabores únicos, massa artesanal e ingredientes frescos
+                🍕 Massa fermentada 24h • Ingredientes premium • Forno à lenha
               </p>
               
               <p className="text-lg text-orange-200 max-w-lg">
-                Mais de 10 mil clientes satisfeitos! Entregamos felicidade em cada fatia, 
-                com a qualidade que você merece e a rapidez que precisa.
+                <strong>Mais de 15 mil pizzas entregues!</strong> Cada fatia é uma experiência única, 
+                preparada com amor e ingredientes selecionados especialmente para você.
               </p>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 py-6">
+            {/* Urgency Stats */}
+            <div className="grid grid-cols-3 gap-6 py-6 border-y border-white/20">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">30min</div>
-                <div className="text-sm text-orange-200">Entrega Rápida</div>
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">25min</div>
+                <div className="text-sm text-orange-200">Entrega Express</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">10k+</div>
-                <div className="text-sm text-orange-200">Clientes Felizes</div>
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">15k+</div>
+                <div className="text-sm text-orange-200">Clientes Apaixonados</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-bold text-yellow-300">4.9★</div>
-                <div className="text-sm text-orange-200">Avaliação</div>
+                <div className="text-sm text-orange-200">Nota Perfeita</div>
+              </div>
+            </div>
+
+            {/* Social Proof */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="flex -space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-yellow-400 border-2 border-white"></div>
+                  <div className="w-8 h-8 rounded-full bg-green-400 border-2 border-white"></div>
+                  <div className="w-8 h-8 rounded-full bg-blue-400 border-2 border-white"></div>
+                </div>
+                <div className="text-sm">
+                  <strong>+127 pessoas</strong> pediram nas últimas 2 horas
+                </div>
               </div>
             </div>
 
@@ -65,7 +79,7 @@ const HeroSection = () => {
                 onClick={scrollToMenu}
                 className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-lg px-8 py-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
               >
-                🍕 Ver Cardápio Completo
+                🍕 Pedir Agora - 25% OFF
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               
@@ -82,15 +96,15 @@ const HeroSection = () => {
             <div className="flex flex-wrap items-center gap-6 pt-4">
               <div className="flex items-center space-x-2 text-orange-200">
                 <Clock className="w-5 h-5" />
-                <span className="text-sm">Entrega em até 30min</span>
+                <span className="text-sm">Entrega em até 25min</span>
               </div>
               <div className="flex items-center space-x-2 text-orange-200">
                 <Truck className="w-5 h-5" />
-                <span className="text-sm">Frete grátis acima de R$ 50</span>
+                <span className="text-sm">Frete grátis acima de R$ 45</span>
               </div>
               <div className="flex items-center space-x-2 text-orange-200">
                 <Shield className="w-5 h-5" />
-                <span className="text-sm">Satisfação garantida</span>
+                <span className="text-sm">Satisfação 100% garantida</span>
               </div>
             </div>
           </div>
@@ -100,7 +114,7 @@ const HeroSection = () => {
             <div className="relative z-10">
               <img
                 src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=600&fit=crop&crop=center"
-                alt="Pizza deliciosa"
+                alt="Pizza artesanal deliciosa"
                 className="w-full h-auto rounded-2xl shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-300"
               />
               
@@ -111,7 +125,7 @@ const HeroSection = () => {
               
               {/* Price Badge */}
               <div className="absolute -bottom-4 -right-4 bg-green-500 text-white px-6 py-3 rounded-full font-bold shadow-lg">
-                A partir de R$ 32,90
+                A partir de R$ 28,90
               </div>
             </div>
             
