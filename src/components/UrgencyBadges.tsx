@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Clock, Fire, TrendingUp, Users, AlertCircle } from 'lucide-react';
+import { Clock, Flame, TrendingUp, Users, AlertCircle } from 'lucide-react';
 
 interface UrgencyBadgeProps {
   type: 'bestseller' | 'limited' | 'trending' | 'lastunits' | 'timer';
@@ -13,7 +12,7 @@ const UrgencyBadges = ({ type, value, className = "" }: UrgencyBadgeProps) => {
     switch (type) {
       case 'bestseller':
         return {
-          icon: <Fire className="w-3 h-3" />,
+          icon: <Flame className="w-3 h-3" />,
           text: 'Mais Vendido',
           bgColor: 'bg-red-500',
           textColor: 'text-white',

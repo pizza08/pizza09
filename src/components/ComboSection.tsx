@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Minus, ShoppingCart, Star, Clock, Fire } from 'lucide-react';
+import { Plus, Minus, ShoppingCart, Star, Clock, Flame } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import ImageWithFallback from './ImageWithFallback';
 import { ButtonLoading } from './LoadingStates';
@@ -98,7 +98,7 @@ const ComboSection = () => {
 
   const getBadgeIcon = (badge: string) => {
     switch (badge) {
-      case 'hot': return <Fire className="w-3 h-3" />;
+      case 'hot': return <Flame className="w-3 h-3" />;
       case 'new': return <Star className="w-3 h-3" />;
       case 'limited': return <Clock className="w-3 h-3" />;
       default: return null;
