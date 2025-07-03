@@ -7,6 +7,12 @@ interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  customization?: {
+    size: any;
+    extraIngredients: string[];
+    removedIngredients: string[];
+    originalPizza: any;
+  };
 }
 
 interface CartState {
@@ -15,7 +21,7 @@ interface CartState {
 }
 
 type CartAction =
-  | { type: 'ADD_ITEM'; payload: Omit<CartItem, 'quantity'> }
+  | { type: 'ADD_ITEM'; payload: Omit<CartItem, 'quantity'> | CartItem }
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' };
@@ -28,12 +34,26 @@ const CartContext = createContext<{
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
+      const newItem = 'quantity' in action.payload 
+        ? action.payload as CartItem
+        : { ...action.payload, quantity: 1 } as CartItem;
+      
+      // For customized pizzas, always add as new item (they have unique IDs)
+      if (newItem.customization) {
+        const newItems = [...state.items, newItem];
+        return {
+          items: newItems,
+          total: newItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+        };
+      }
+      
+      // For regular pizzas, check if exists and increment quantity
+      const existingItem = state.items.find(item => item.id === newItem.id && !item.customization);
       
       if (existingItem) {
         const updatedItems = state.items.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantity: item.quantity + 1 }
+          item.id === newItem.id && !item.customization
+            ? { ...item, quantity: item.quantity + newItem.quantity }
             : item
         );
         return {
@@ -41,7 +61,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
           total: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
         };
       } else {
-        const newItems = [...state.items, { ...action.payload, quantity: 1 }];
+        const newItems = [...state.items, newItem];
         return {
           items: newItems,
           total: newItems.reduce((sum, item) => sum + item.price * item.quantity, 0)

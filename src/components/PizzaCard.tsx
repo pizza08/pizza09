@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, Star } from 'lucide-react';
+import PizzaCustomizationModal from './PizzaCustomizationModal';
 
 interface PizzaCardProps {
   id: string;
@@ -13,10 +14,15 @@ interface PizzaCardProps {
 }
 
 const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }: PizzaCardProps) => {
-  const handleAddToCart = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const pizza = { id, name, description, price, image, rating, category: '', ingredients: [] };
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onAddToCart({
       id,
-      name,
+      name: `${name} (Média)`,
       price,
       image,
       quantity: 1
@@ -24,39 +30,57 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      <div className="relative">
-        <img 
-          src={image} 
-          alt={name}
-          className="w-full h-48 object-cover"
-        />
-        <div className="absolute top-3 right-3 bg-white rounded-full px-2 py-1 flex items-center space-x-1">
-          <Star className="w-4 h-4 text-yellow-400 fill-current" />
-          <span className="text-sm font-medium">{rating}</span>
-        </div>
-      </div>
-      
-      <div className="p-5">
-        <h3 className="text-xl font-bold text-gray-800 mb-2">{name}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-2xl font-bold text-orange-500">
-              R$ {price.toFixed(2).replace('.', ',')}
-            </span>
+    <>
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+        <div className="relative" onClick={() => setIsModalOpen(true)}>
+          <img 
+            src={image} 
+            alt={name}
+            className="w-full h-48 object-cover"
+          />
+          <div className="absolute top-3 right-3 bg-white rounded-full px-2 py-1 flex items-center space-x-1">
+            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+            <span className="text-sm font-medium">{rating}</span>
           </div>
+        </div>
+        
+        <div className="p-5" onClick={() => setIsModalOpen(true)}>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">{name}</h3>
+          <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
           
-          <button
-            onClick={handleAddToCart}
-            className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full transition-colors group"
-          >
-            <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
-          </button>
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-sm text-gray-500">A partir de</span>
+              <span className="text-2xl font-bold text-orange-500">
+                R$ {(price * 0.8).toFixed(2).replace('.', ',')}
+              </span>
+            </div>
+            
+            <div className="flex space-x-2">
+              <button
+                onClick={handleQuickAdd}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full transition-colors"
+                title="Adicionar tamanho médio"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium"
+              >
+                Personalizar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <PizzaCustomizationModal
+        pizza={pizza}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 };
 

@@ -27,7 +27,7 @@ const Menu = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Nosso Cardápio</h1>
-          <p className="text-xl text-gray-600">Escolha sua pizza favorita</p>
+          <p className="text-xl text-gray-600">Escolha sua pizza favorita e personalize como quiser</p>
         </div>
 
         {/* Search Bar */}
@@ -57,6 +57,13 @@ const Menu = () => {
               {category}
             </button>
           ))}
+        </div>
+
+        {/* Info Banner */}
+        <div className="bg-orange-100 border border-orange-200 rounded-lg p-4 mb-8 text-center">
+          <p className="text-orange-800">
+            🍕 <strong>Novo!</strong> Agora você pode personalizar suas pizzas! Escolha o tamanho e adicione ingredientes extras.
+          </p>
         </div>
 
         {/* Pizza Grid */}
