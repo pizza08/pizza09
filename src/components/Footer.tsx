@@ -37,7 +37,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Clock className="w-4 h-4 text-orange-400" />
-                <span className="text-gray-300">18h às 23h - Todos os dias</span>
+                <span className="text-gray-300">18h às 00h - Todos os dias</span>
               </div>
             </div>
           </div>
