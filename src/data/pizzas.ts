@@ -1,3 +1,4 @@
+
 export interface Pizza {
   id: string;
   name: string;
@@ -318,7 +319,7 @@ export const pizzas: Pizza[] = [
     basePrice: 38.00,
     price: 38.00,
     rating: 4.4,
-    image: 'https://images.unsplash.com/photo-1607920591413-4ec007e70023?w=500&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '/lovable-uploads/5c20454c-357a-4880-9126-1179c953a54a.png',
     category: 'Doces',
     ingredients: ['banana', 'canela', 'açúcar cristal'],
     sizes: {
