@@ -88,8 +88,9 @@ const Contact = () => {
               <CardContent className="space-y-3">
                 <div>
                   <p className="font-semibold">Forno Nobre Pizzaria</p>
-                  <p className="text-gray-600">Rua das Pizzas, 123 - Centro</p>
-                  <p className="text-gray-600">Blumenau - SC, 89010-000</p>
+                  <p className="text-gray-600">Shopping Balneário – Piso Térreo
+Av. Santa Catarina, 1 </p>
+                  <p className="text-gray-600">– Balneário Camboriú/</p>
                 </div>
                 <div className="bg-orange-50 p-3 rounded-lg">
                   <p className="text-sm font-medium text-orange-800">🚚 Entregamos em toda Balneário Camboriú e região</p>
