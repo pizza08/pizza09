@@ -72,7 +72,7 @@ const Home = () => {
               to="/menu"
               className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-colors"
             >
-              Ver Cardápio Completo
+              🍕 Ver Cardápio Completo
             </Link>
           </div>
 
