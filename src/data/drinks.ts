@@ -1,3 +1,4 @@
+
 export interface Drink {
   id: string;
   name: string;
@@ -26,7 +27,7 @@ export const drinks: Drink[] = [
     name: 'Guaraná Antarctica',
     description: 'O sabor genuinamente brasileiro do guaraná.',
     price: 11.50,
-    image: 'https://images.unsplash.com/photo-1624517452488-04f6135a0a0b?w=300&h=300&fit=crop&crop=center',
+    image: '/lovable-uploads/fad9a47f-fb3f-4eaa-a3cb-20f22f34f438.png',
     category: 'refrigerante',
     size: '2L',
     popular: true
