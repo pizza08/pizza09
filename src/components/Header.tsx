@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Clock, MapPin } from 'lucide-react';
@@ -32,9 +33,11 @@ const Header = ({
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">P</span>
-              </div>
+              <img 
+                src="/lovable-uploads/e70ae742-0551-4158-90f5-1f8aee0f479e.png" 
+                alt="Forno Nobre Logo" 
+                className="w-10 h-10 object-contain"
+              />
               <span className="text-xl font-bold text-gray-800">Forno Nobre</span>
             </Link>
 
