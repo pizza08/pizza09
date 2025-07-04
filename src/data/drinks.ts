@@ -1,5 +1,3 @@
-
-
 export interface Drink {
   id: string;
   name: string;
@@ -18,7 +16,7 @@ export const drinks: Drink[] = [
     name: 'Coca-Cola',
     description: 'Refrigerante de cola tradicional, gelado e refrescante.',
     price: 12.00,
-    image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=300&h=300&fit=crop&crop=center',
+    image: '/lovable-uploads/586d5ea7-8294-4934-9400-70ec4d276e46.png',
     category: 'refrigerante',
     size: '2L',
     popular: true
@@ -82,4 +80,3 @@ export const drinkCategories = [
   { id: 'suco', name: 'Sucos', count: drinks.filter(d => d.category === 'suco').length },
   { id: 'agua', name: 'Águas', count: drinks.filter(d => d.category === 'agua').length }
 ];
-
