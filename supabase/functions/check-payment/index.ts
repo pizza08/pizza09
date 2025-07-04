@@ -21,8 +21,8 @@ serve(async (req) => {
 
     console.log('Checking payment status for ID:', paymentId)
 
-    // Verificar status do pagamento na Abacate Pay usando GET com o ID na URL
-    const abacateResponse = await fetch(`https://api.abacatepay.com/v1/pixQrCode/${paymentId}`, {
+    // Verificar status do pagamento na Abacate Pay usando o endpoint correto
+    const abacateResponse = await fetch(`https://api.abacatepay.com/v1/pixQrCode/check?id=${paymentId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${abacateApiKey}`,
