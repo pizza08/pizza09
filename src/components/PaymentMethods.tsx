@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CreditCard, Smartphone, Banknote, QrCode } from 'lucide-react';
+import { CreditCard, QrCode } from 'lucide-react';
 
 interface PaymentMethodsProps {
   selectedMethod: string;
@@ -31,13 +31,6 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, orderTotal }: PaymentM
       description: 'Pagamento instantâneo',
       available: true,
       discount: orderTotal >= 50 ? 5 : 0
-    },
-    {
-      id: 'cash',
-      name: 'Dinheiro',
-      icon: Banknote,
-      description: 'Pagamento na entrega',
-      available: true
     }
   ];
 
@@ -97,21 +90,6 @@ const PaymentMethods = ({ selectedMethod, onMethodSelect, orderTotal }: PaymentM
           <p className="text-green-800 text-sm">
             🎉 <strong>Desconto PIX:</strong> 5% de desconto em pedidos acima de R$ 50!
           </p>
-        </div>
-      )}
-      
-      {selectedMethod === 'cash' && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
-          <div>
-            <label className="block text-sm font-medium text-blue-800 mb-2">
-              Troco para quanto? (opcional)
-            </label>
-            <input
-              type="number"
-              placeholder={`Ex: ${(orderTotal + 10).toFixed(0)}`}
-              className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
         </div>
       )}
     </div>

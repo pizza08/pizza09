@@ -140,12 +140,12 @@ const Cart = () => {
                 className="mb-3"
               />
               
-              {/* Checkout Tradicional */}
+              {/* Checkout Tradicional alterado para Finalizar Pedido */}
               <Link
                 to="/checkout"
                 className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium text-center transition-colors block mb-3"
               >
-                Checkout Tradicional
+                Finalizar Pedido
               </Link>
               
               <Link
