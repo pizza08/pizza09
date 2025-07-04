@@ -89,7 +89,8 @@ const Contact = () => {
                 <div>
                   <p className="font-semibold">Forno Nobre Pizzaria</p>
                   <p className="text-gray-600">Shopping Balneário – Piso Térreo
-Av. Santa Catarina, 1 </p>
+
+ Av. Santa Catarina, 1 </p>
                   <p className="text-gray-600">– Balneário Camboriú/</p>
                 </div>
                 <div className="bg-orange-50 p-3 rounded-lg">
