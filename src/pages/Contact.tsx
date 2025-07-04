@@ -6,7 +6,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLeads } from '@/hooks/useLeads';
 import { useToast } from '@/hooks/use-toast';
-
 const Contact = () => {
   const [formData, setFormData] = useState({
     nome: '',
@@ -14,30 +13,35 @@ const Contact = () => {
     email: '',
     mensagem: ''
   });
-  const { createLead, isLoading } = useLeads();
-  const { toast } = useToast();
-
+  const {
+    createLead,
+    isLoading
+  } = useLeads();
+  const {
+    toast
+  } = useToast();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await createLead({
       ...formData,
       origem: 'pagina_contato'
     });
-    
     if (result.success) {
-      setFormData({ nome: '', telefone: '', email: '', mensagem: '' });
+      setFormData({
+        nome: '',
+        telefone: '',
+        email: '',
+        mensagem: ''
+      });
     }
   };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12">
+  return <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
@@ -66,10 +70,7 @@ const Contact = () => {
                     <p className="font-semibold text-lg">(47) 99280-9169</p>
                     <p className="text-gray-600">WhatsApp disponível 24h</p>
                   </div>
-                  <Button 
-                    onClick={() => window.open('https://wa.me/5547992809169', '_blank')}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
+                  <Button onClick={() => window.open('https://wa.me/5547992809169', '_blank')} className="bg-green-600 hover:bg-green-700">
                     <MessageCircle className="w-4 h-4 mr-2" />
                     Conversar
                   </Button>
@@ -91,9 +92,7 @@ const Contact = () => {
                   <p className="text-gray-600">Blumenau - SC, 89010-000</p>
                 </div>
                 <div className="bg-orange-50 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-orange-800">
-                    🚚 Entregamos em toda Blumenau e região
-                  </p>
+                  <p className="text-sm font-medium text-orange-800">🚚 Entregamos em toda Balneário Camboriú e região</p>
                   <p className="text-sm text-orange-700">
                     Frete GRÁTIS para pedidos acima de R$ 50
                   </p>
@@ -144,9 +143,7 @@ const Contact = () => {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                      ))}
+                      {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />)}
                     </div>
                     <span className="font-bold text-lg">4.8/5</span>
                     <span className="text-gray-600">•</span>
@@ -179,60 +176,31 @@ const Contact = () => {
                     <label className="block text-sm font-medium mb-1">
                       Nome completo *
                     </label>
-                    <Input
-                      name="nome"
-                      value={formData.nome}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Seu nome"
-                    />
+                    <Input name="nome" value={formData.nome} onChange={handleInputChange} required placeholder="Seu nome" />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       Telefone/WhatsApp *
                     </label>
-                    <Input
-                      name="telefone"
-                      value={formData.telefone}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="(47) 99999-9999"
-                    />
+                    <Input name="telefone" value={formData.telefone} onChange={handleInputChange} required placeholder="(47) 99999-9999" />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       E-mail
                     </label>
-                    <Input
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="seu@email.com"
-                    />
+                    <Input name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="seu@email.com" />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       Mensagem *
                     </label>
-                    <Textarea
-                      name="mensagem"
-                      value={formData.mensagem}
-                      onChange={handleInputChange}
-                      required
-                      rows={4}
-                      placeholder="Como podemos ajudar você?"
-                    />
+                    <Textarea name="mensagem" value={formData.mensagem} onChange={handleInputChange} required rows={4} placeholder="Como podemos ajudar você?" />
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    disabled={isLoading}
-                    className="w-full bg-orange-500 hover:bg-orange-600"
-                  >
+                  <Button type="submit" disabled={isLoading} className="w-full bg-orange-500 hover:bg-orange-600">
                     {isLoading ? 'Enviando...' : 'Enviar Mensagem'}
                   </Button>
 
@@ -252,10 +220,7 @@ const Contact = () => {
                 <p className="text-green-700 mb-4">
                   Nosso WhatsApp está sempre disponível para pedidos e dúvidas!
                 </p>
-                <Button 
-                  onClick={() => window.open('https://wa.me/5547992809169?text=Olá! Vim pela página de contato e gostaria de fazer um pedido 😊', '_blank')}
-                  className="bg-green-600 hover:bg-green-700"
-                >
+                <Button onClick={() => window.open('https://wa.me/5547992809169?text=Olá! Vim pela página de contato e gostaria de fazer um pedido 😊', '_blank')} className="bg-green-600 hover:bg-green-700">
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Falar no WhatsApp
                 </Button>
@@ -264,8 +229,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
