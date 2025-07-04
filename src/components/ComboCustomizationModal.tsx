@@ -2,14 +2,13 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { X, Pizza, ShoppingCart } from 'lucide-react';
 import { pizzas } from '@/data/pizzas';
-import { useComboSelections } from '@/hooks/useComboSelections';
-import { useLeads } from '@/hooks/useLeads';
-import { ButtonLoading } from './LoadingStates';
+import { drinks } from '@/data/drinks';
+import { useCart } from '@/contexts/CartContext';
+import { useCartToast } from '@/hooks/useCartToast';
 
 interface ComboItem {
   id: string;
@@ -28,12 +27,14 @@ interface ComboCustomizationModalProps {
 
 const ComboCustomizationModal = ({ isOpen, onClose, combo }: ComboCustomizationModalProps) => {
   const [selectedPizzas, setSelectedPizzas] = useState<string[]>(new Array(combo.pizzaCount).fill(''));
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [customerEmail, setCustomerEmail] = useState('');
-  
-  const { createComboSelection, isLoading: isCreatingCombo } = useComboSelections();
-  const { createLead, isLoading: isCreatingLead } = useLeads();
+  const [selectedDrinks, setSelectedDrinks] = useState<string[]>(new Array(combo.cokeCount).fill(''));
+  const { dispatch } = useCart();
+  const { showAddToCartSuccess } = useCartToast();
+
+  // Filtrar apenas refrigerantes de 2L
+  const availableDrinks = drinks.filter(drink => 
+    drink.category === 'refrigerante' && drink.size === '2L'
+  );
 
   const handlePizzaSelection = (index: number, pizzaName: string) => {
     const newSelections = [...selectedPizzas];
@@ -41,52 +42,41 @@ const ComboCustomizationModal = ({ isOpen, onClose, combo }: ComboCustomizationM
     setSelectedPizzas(newSelections);
   };
 
-  const allPizzasSelected = selectedPizzas.every(pizza => pizza !== '');
-  const isFormValid = customerName && customerPhone && allPizzasSelected;
+  const handleDrinkSelection = (index: number, drinkName: string) => {
+    const newSelections = [...selectedDrinks];
+    newSelections[index] = drinkName;
+    setSelectedDrinks(newSelections);
+  };
 
-  const handleSubmit = async () => {
+  const allPizzasSelected = selectedPizzas.every(pizza => pizza !== '');
+  const allDrinksSelected = selectedDrinks.every(drink => drink !== '');
+  const isFormValid = allPizzasSelected && allDrinksSelected;
+
+  const handleAddToCart = () => {
     if (!isFormValid) return;
 
-    // Criar lead primeiro
-    await createLead({
-      nome: customerName,
-      telefone: customerPhone,
-      email: customerEmail,
-      interesse: combo.name,
-      origem: 'combo-personalizacao'
-    });
+    const customCombo = {
+      id: `${combo.id}-${Date.now()}`,
+      name: combo.name,
+      price: combo.comboPrice,
+      image: pizzas.find(p => p.name === selectedPizzas[0])?.image || '/placeholder.svg',
+      quantity: 1,
+      customization: {
+        pizzas: selectedPizzas,
+        drinks: selectedDrinks,
+        originalCombo: combo
+      }
+    };
 
-    // Preparar dados das pizzas selecionadas
-    const selectedPizzasData = selectedPizzas.map(pizzaName => {
-      const pizza = pizzas.find(p => p.name === pizzaName);
-      return {
-        name: pizzaName,
-        size: 'Grande',
-        price: pizza?.price || 0
-      };
-    });
-
-    // Criar seleção de combo
-    const result = await createComboSelection({
-      comboId: combo.id,
-      customerName,
-      customerPhone,
-      customerEmail,
-      selectedPizzas: selectedPizzasData,
-      totalPrice: combo.comboPrice
-    });
-
-    if (result.success) {
-      onClose();
-      resetForm();
-    }
+    dispatch({ type: 'ADD_ITEM', payload: customCombo });
+    showAddToCartSuccess(combo.name);
+    onClose();
+    resetForm();
   };
 
   const resetForm = () => {
     setSelectedPizzas(new Array(combo.pizzaCount).fill(''));
-    setCustomerName('');
-    setCustomerPhone('');
-    setCustomerEmail('');
+    setSelectedDrinks(new Array(combo.cokeCount).fill(''));
   };
 
   return (
@@ -122,7 +112,41 @@ const ComboCustomizationModal = ({ isOpen, onClose, combo }: ComboCustomizationM
                           <div className="flex items-center justify-between w-full">
                             <span>{pizza.name}</span>
                             <span className="text-sm text-gray-500 ml-2">
-                              R$ {pizza.price.toFixed(2).replace('.', ',')}
+                              R$ {pizza.sizes.large.price.toFixed(2).replace('.', ',')}
+                            </span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Seleção de Bebidas */}
+          <div>
+            <h3 className="font-semibold mb-4 text-gray-800">
+              Escolha {combo.cokeCount} bebida{combo.cokeCount > 1 ? 's' : ''} de 2L:
+            </h3>
+            <div className="space-y-3">
+              {Array.from({ length: combo.cokeCount }, (_, index) => (
+                <div key={index}>
+                  <Label className="text-sm font-medium">Bebida {index + 1}</Label>
+                  <Select
+                    value={selectedDrinks[index]}
+                    onValueChange={(value) => handleDrinkSelection(index, value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione uma bebida" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableDrinks.map((drink) => (
+                        <SelectItem key={drink.id} value={drink.name}>
+                          <div className="flex items-center justify-between w-full">
+                            <span>{drink.name}</span>
+                            <span className="text-sm text-gray-500 ml-2">
+                              R$ {drink.price.toFixed(2).replace('.', ',')}
                             </span>
                           </div>
                         </SelectItem>
@@ -144,9 +168,11 @@ const ComboCustomizationModal = ({ isOpen, onClose, combo }: ComboCustomizationM
                   {pizza || `Pizza ${index + 1} - Não selecionada`}
                 </li>
               ))}
-              <li className="flex items-center gap-2">
-                🥤 {combo.cokeCount} Coca-Cola 2L
-              </li>
+              {selectedDrinks.map((drink, index) => (
+                <li key={index} className="flex items-center gap-2">
+                  🥤 {drink || `Bebida ${index + 1} - Não selecionada`}
+                </li>
+              ))}
             </ul>
             <div className="mt-3 pt-3 border-t border-orange-200">
               <div className="flex justify-between items-center">
@@ -155,44 +181,6 @@ const ComboCustomizationModal = ({ isOpen, onClose, combo }: ComboCustomizationM
                   R$ {combo.comboPrice.toFixed(2).replace('.', ',')}
                 </span>
               </div>
-            </div>
-          </div>
-
-          {/* Dados do Cliente */}
-          <div className="space-y-4">
-            <h3 className="font-semibold text-gray-800">Seus dados:</h3>
-            
-            <div>
-              <Label htmlFor="name">Nome completo *</Label>
-              <Input
-                id="name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="Digite seu nome completo"
-                required
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="phone">Telefone/WhatsApp *</Label>
-              <Input
-                id="phone"
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                placeholder="(11) 99999-9999"
-                required
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="email">E-mail (opcional)</Label>
-              <Input
-                id="email"
-                type="email"
-                value={customerEmail}
-                onChange={(e) => setCustomerEmail(e.target.value)}
-                placeholder="seu@email.com"
-              />
             </div>
           </div>
 
@@ -206,20 +194,14 @@ const ComboCustomizationModal = ({ isOpen, onClose, combo }: ComboCustomizationM
               Cancelar
             </Button>
             
-            {isCreatingCombo || isCreatingLead ? (
-              <ButtonLoading isLoading={true} className="flex-1">
-                Processando...
-              </ButtonLoading>
-            ) : (
-              <Button
-                onClick={handleSubmit}
-                disabled={!isFormValid}
-                className="flex-1 bg-orange-500 hover:bg-orange-600"
-              >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Confirmar Combo
-              </Button>
-            )}
+            <Button
+              onClick={handleAddToCart}
+              disabled={!isFormValid}
+              className="flex-1 bg-orange-500 hover:bg-orange-600"
+            >
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Adicionar ao Carrinho
+            </Button>
           </div>
         </div>
       </DialogContent>
