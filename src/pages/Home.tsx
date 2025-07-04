@@ -64,7 +64,7 @@ const Home = () => {
           {/* CTAs Principais */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <WhatsAppOrder 
-              text="🍕 Pedir via WhatsApp"
+              text="Pedir via WhatsApp"
               className="text-lg px-8 py-4"
             />
             
