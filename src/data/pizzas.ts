@@ -253,7 +253,7 @@ export const pizzas: Pizza[] = [
     basePrice: 52.00,
     price: 52.00,
     rating: 4.8,
-    image: 'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=500&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '/lovable-uploads/d63fa0a8-fbca-47e7-b19d-1ccc8f0e4db6.png',
     category: 'Doces',
     popular: true,
     ingredients: ['nutella', 'morangos', 'leite condensado'],
