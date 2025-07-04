@@ -8,10 +8,15 @@ interface CartItem {
   image: string;
   quantity: number;
   customization?: {
-    size: any;
-    extraIngredients: string[];
-    removedIngredients: string[];
-    originalPizza: any;
+    // Pizza customization properties
+    size?: any;
+    extraIngredients?: string[];
+    removedIngredients?: string[];
+    originalPizza?: any;
+    // Combo customization properties
+    pizzas?: string[];
+    drinks?: string[];
+    originalCombo?: any;
   };
 }
 
