@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Plus, ShoppingCart, Star, Clock, Flame, Timer } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -120,13 +121,13 @@ const FunctionalCombos = () => {
           </p>
         </div>
 
-        {/* Layout horizontal com scroll */}
-        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+        {/* Layout horizontal com scroll e altura consistente */}
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide items-stretch">
           {combos.map((combo) => (
-            <div key={combo.id} className="flex-shrink-0 w-72 bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div key={combo.id} className="flex-shrink-0 w-72 h-[420px] bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
               
               {/* Header com badges */}
-              <div className="relative p-4 pb-2">
+              <div className="relative p-4 pb-2 flex-shrink-0">
                 {combo.badge && (
                   <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${getBadgeColor(combo.badge)}`}>
                     {getBadgeIcon(combo.badge)}
@@ -143,7 +144,7 @@ const FunctionalCombos = () => {
               </div>
 
               {/* Imagens dos itens */}
-              <div className="px-4 mb-3">
+              <div className="px-4 mb-3 flex-shrink-0">
                 <div className="flex gap-1 justify-center">
                   {combo.items.slice(0, 3).map((item, index) => (
                     <img
@@ -156,36 +157,39 @@ const FunctionalCombos = () => {
                 </div>
               </div>
 
-              <div className="px-4 pb-4">
-                <h3 className="text-lg font-bold text-gray-800 mb-2">{combo.name}</h3>
-                
-                {/* Lista de itens */}
-                <div className="mb-3">
-                  {combo.items.map((item, index) => (
-                    <div key={index} className="text-xs text-gray-600 flex items-center">
-                      <Plus className="w-3 h-3 mr-1 text-orange-500" />
-                      {item.name}
-                    </div>
-                  ))}
-                </div>
+              {/* Conteúdo flexível */}
+              <div className="px-4 pb-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">{combo.name}</h3>
+                  
+                  {/* Lista de itens */}
+                  <div className="mb-3">
+                    {combo.items.map((item, index) => (
+                      <div key={index} className="text-xs text-gray-600 flex items-center">
+                        <Plus className="w-3 h-3 mr-1 text-orange-500" />
+                        {item.name}
+                      </div>
+                    ))}
+                  </div>
 
-                {/* Preços */}
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <span className="text-sm line-through text-gray-400">
-                      R$ {combo.originalPrice.toFixed(2).replace('.', ',')}
-                    </span>
-                    <div className="text-xl font-bold text-orange-500">
-                      R$ {combo.comboPrice.toFixed(2).replace('.', ',')}
+                  {/* Preços */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <span className="text-sm line-through text-gray-400">
+                        R$ {combo.originalPrice.toFixed(2).replace('.', ',')}
+                      </span>
+                      <div className="text-xl font-bold text-orange-500">
+                        R$ {combo.comboPrice.toFixed(2).replace('.', ',')}
+                      </div>
+                    </div>
+                    <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">
+                      Economize R$ {combo.savings.toFixed(2).replace('.', ',')}
                     </div>
                   </div>
-                  <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">
-                    Economize R$ {combo.savings.toFixed(2).replace('.', ',')}
-                  </div>
                 </div>
 
-                {/* Botões de ação */}
-                <div className="space-y-2">
+                {/* Botões de ação sempre no final */}
+                <div className="space-y-2 mt-auto">
                   <WhatsAppOrder 
                     variant="quick"
                     text="Pedir Combo"
