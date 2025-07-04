@@ -7,6 +7,7 @@ import MobileFilters from '../components/MobileFilters';
 import SmartSearch from '../components/SmartSearch';
 import FunctionalCombos from '../components/FunctionalCombos';
 import MiniCartDropdown from '../components/MiniCartDropdown';
+import CartRecoverySystem from '../components/CartRecoverySystem';
 import { MenuLoadingSkeleton } from '../components/LoadingStates';
 import { pizzas } from '../data/pizzas';
 import { drinks, drinkCategories } from '../data/drinks';
@@ -19,6 +20,7 @@ const Menu = () => {
   const { dispatch } = useCart();
   useCartPersistence();
   
+  const customerName = localStorage.getItem('customer_name') || '';
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todas');
@@ -289,6 +291,9 @@ const Menu = () => {
           <ArrowUp className="w-5 h-5" />
         </button>
       )}
+
+      {/* Sistema de Recuperação de Carrinho */}
+      <CartRecoverySystem />
     </div>
   );
 };

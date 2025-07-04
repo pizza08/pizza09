@@ -3,9 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, MapPin, Star } from 'lucide-react';
 import WhatsAppOrder from '../components/WhatsAppOrder';
+import LeadCaptureModal from '../components/LeadCaptureModal';
+import CartRecoverySystem from '../components/CartRecoverySystem';
+import { useLeadCapture } from '../hooks/useLeadCapture';
 import { pizzas } from '../data/pizzas';
 
 const Home = () => {
+  const { showLeadModal, customerData, isPersonalized, handleLeadCaptured, closeLeadModal } = useLeadCapture();
   // Buscar pizzas mais populares do banco de dados
   const popularPizzas = pizzas
     .filter(p => p.popular || p.rating >= 4.7)
@@ -31,7 +35,7 @@ const Home = () => {
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
-            As Melhores Pizzas
+            {isPersonalized ? `Olá ${customerData.name}! ` : ''}As Melhores Pizzas
             <span className="text-orange-500 block">da Região</span>
           </h1>
           
@@ -106,6 +110,14 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Modais e sistemas */}
+      <LeadCaptureModal 
+        isOpen={showLeadModal}
+        onClose={closeLeadModal}
+        onLeadCaptured={handleLeadCaptured}
+      />
+      <CartRecoverySystem />
     </div>
   );
 };

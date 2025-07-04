@@ -13,6 +13,7 @@ import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import { useCart } from "./contexts/CartContext";
 
@@ -32,6 +33,7 @@ const AppContent = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/index" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

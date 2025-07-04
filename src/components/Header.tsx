@@ -59,6 +59,9 @@ const Header = ({ cartItemCount }: HeaderProps) => {
               <Link to="/menu" className={`font-medium transition-colors ${location.pathname === '/menu' ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500'}`}>
                 Cardápio
               </Link>
+              <Link to="/contact" className={`font-medium transition-colors ${location.pathname === '/contact' ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500'}`}>
+                Contato
+              </Link>
               <button 
                 onClick={scrollToAbout}
                 className="font-medium text-gray-700 hover:text-orange-500 transition-colors"
@@ -94,6 +97,9 @@ const Header = ({ cartItemCount }: HeaderProps) => {
               </Link>
               <Link to="/menu" className="block font-medium text-gray-700 hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Cardápio
+              </Link>
+              <Link to="/contact" className="block font-medium text-gray-700 hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>
+                Contato
               </Link>
               <button 
                 onClick={scrollToAbout}

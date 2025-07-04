@@ -30,7 +30,11 @@ const WhatsAppOrder = ({
   const handleWhatsAppClick = () => {
     showWhatsAppRedirect();
     
-    let message = "Olá! Gostaria de fazer um pedido:\n\n";
+    // Verificar se temos dados do cliente
+    const customerName = localStorage.getItem('customer_name');
+    const greeting = customerName ? `Oi! Sou ${customerName} e gostaria` : "Olá! Gostaria";
+    
+    let message = `${greeting} de fazer um pedido:\n\n`;
     
     // Se for um produto específico
     if (pizzaName && pizzaPrice) {
