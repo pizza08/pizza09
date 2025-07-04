@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import { Separator } from '../components/ui/separator';
 import PaymentMethods from '../components/PaymentMethods';
 import PaymentQRCode from '../components/PaymentQRCode';
+import PaymentConfirmation from '../components/PaymentConfirmation';
 import PixDeliveryModal, { PixDeliveryData } from '../components/PixDeliveryModal';
 import { ArrowLeft, CheckCircle, CreditCard } from 'lucide-react';
 
@@ -19,6 +20,7 @@ const Checkout = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [showPixModal, setShowPixModal] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [deliveryData, setDeliveryData] = useState<PixDeliveryData | null>(null);
   const [paymentData, setPaymentData] = useState<{
     paymentId: string;
@@ -112,12 +114,26 @@ const Checkout = () => {
 
   const handlePaymentConfirmed = async () => {
     await createOrderDirectly();
+    setShowQRCode(false);
+    setShowConfirmation(true);
   };
 
   const handleCancelPayment = () => {
     setShowQRCode(false);
     setPaymentData(null);
     setDeliveryData(null);
+  };
+
+  const handleContinueShopping = () => {
+    dispatch({ type: 'CLEAR_CART' });
+    setShowConfirmation(false);
+    navigate('/menu');
+  };
+
+  const handleGoHome = () => {
+    dispatch({ type: 'CLEAR_CART' });
+    setShowConfirmation(false);
+    navigate('/');
   };
 
   if (state.items.length === 0) {
@@ -128,6 +144,18 @@ const Checkout = () => {
         <Button onClick={() => navigate('/menu')} className="bg-orange-500 hover:bg-orange-600">
           Ver Cardápio
         </Button>
+      </div>
+    );
+  }
+
+  // Se estiver mostrando confirmação
+  if (showConfirmation) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <PaymentConfirmation
+          onContinueShopping={handleContinueShopping}
+          onGoHome={handleGoHome}
+        />
       </div>
     );
   }

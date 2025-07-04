@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Copy, Check, RefreshCw, QrCode } from 'lucide-react';
 import { Button } from './ui/button';
 import { useToast } from '../hooks/use-toast';
+import { usePaymentCheck } from '../hooks/usePaymentCheck';
 
 interface PaymentQRCodeProps {
   paymentId: string;
@@ -22,8 +23,8 @@ const PaymentQRCode = ({
   onCancel 
 }: PaymentQRCodeProps) => {
   const [copied, setCopied] = useState(false);
-  const [isChecking, setIsChecking] = useState(false);
   const { toast } = useToast();
+  const { checkPayment, isChecking } = usePaymentCheck();
 
   const copyToClipboard = async () => {
     try {
@@ -43,26 +44,27 @@ const PaymentQRCode = ({
     }
   };
 
-  const checkPaymentStatus = async () => {
-    setIsChecking(true);
-    try {
-      // Simular verificação de pagamento
-      // Em produção, você faria uma chamada para verificar o status na Abacate Pay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Por enquanto, apenas mostra que está verificando
-      toast({
-        title: "🔍 Verificando pagamento...",
-        description: "Aguarde enquanto confirmamos seu pagamento.",
-      });
-    } catch (error) {
-      toast({
-        title: "❌ Erro na verificação",
-        description: "Não foi possível verificar o status do pagamento.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsChecking(false);
+  const handleCheckPayment = async () => {
+    const result = await checkPayment(paymentId);
+    
+    if (result.success) {
+      if (result.status === 'PAID') {
+        toast({
+          title: "✅ Pagamento confirmado!",
+          description: "Seu pagamento foi processado com sucesso.",
+        });
+        onPaymentConfirmed();
+      } else if (result.status === 'PENDING') {
+        toast({
+          title: "⏳ Pagamento pendente",
+          description: "Aguardando confirmação do pagamento...",
+        });
+      } else {
+        toast({
+          title: "ℹ️ Status do pagamento",
+          description: `Status atual: ${result.status}`,
+        });
+      }
     }
   };
 
@@ -135,7 +137,7 @@ const PaymentQRCode = ({
       {/* Action Buttons */}
       <div className="space-y-3">
         <Button
-          onClick={checkPaymentStatus}
+          onClick={handleCheckPayment}
           disabled={isChecking}
           className="w-full bg-green-600 hover:bg-green-700 text-white"
         >
