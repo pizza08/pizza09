@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Clock, MapPin } from 'lucide-react';
@@ -10,6 +11,14 @@ interface HeaderProps {
 const Header = ({ cartItemCount }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById('about-section');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMenuOpen(false);
+  };
 
   return (
     <>
@@ -50,6 +59,12 @@ const Header = ({ cartItemCount }: HeaderProps) => {
               <Link to="/menu" className={`font-medium transition-colors ${location.pathname === '/menu' ? 'text-orange-500' : 'text-gray-700 hover:text-orange-500'}`}>
                 Cardápio
               </Link>
+              <button 
+                onClick={scrollToAbout}
+                className="font-medium text-gray-700 hover:text-orange-500 transition-colors"
+              >
+                Sobre
+              </button>
             </nav>
 
             {/* CTAs Desktop */}
@@ -80,6 +95,12 @@ const Header = ({ cartItemCount }: HeaderProps) => {
               <Link to="/menu" className="block font-medium text-gray-700 hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Cardápio
               </Link>
+              <button 
+                onClick={scrollToAbout}
+                className="block font-medium text-gray-700 hover:text-orange-500 transition-colors text-left"
+              >
+                Sobre
+              </button>
               <Link to="/cart" className="flex items-center font-medium text-gray-700 hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 Carrinho {cartItemCount > 0 && `(${cartItemCount})`}

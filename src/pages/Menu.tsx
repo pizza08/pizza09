@@ -1,9 +1,12 @@
+
 import React, { useState, useMemo } from 'react';
 import PizzaCard from '../components/PizzaCard';
+import DrinkCard from '../components/DrinkCard';
 import NotificationBanner from '../components/NotificationBanner';
 import MobileSearchBar from '../components/MobileSearchBar';
 import { MenuLoadingSkeleton } from '../components/LoadingStates';
 import { pizzas } from '../data/pizzas';
+import { drinks, drinkCategories } from '../data/drinks';
 import { useCart } from '../contexts/CartContext';
 import { useIsMobile } from '../hooks/use-mobile';
 import { Search, Phone, Clock, MapPin } from 'lucide-react';
@@ -13,6 +16,7 @@ const Menu = () => {
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todas');
+  const [selectedSection, setSelectedSection] = useState<'pizzas' | 'bebidas'>('pizzas');
   const [isLoading, setIsLoading] = useState(true);
 
   // Simular carregamento inicial
@@ -23,10 +27,10 @@ const Menu = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleAddToCart = (pizza: any) => {
+  const handleAddToCart = (item: any) => {
     dispatch({
       type: 'ADD_ITEM',
-      payload: pizza
+      payload: item
     });
   };
 
@@ -35,7 +39,7 @@ const Menu = () => {
     window.open(whatsappUrl, '_blank');
   };
 
-  const categories = [{
+  const pizzaCategories = [{
     id: 'todas',
     name: 'Todas',
     count: pizzas.length
@@ -56,6 +60,17 @@ const Menu = () => {
       return matchesSearch && matchesCategory;
     });
   }, [searchTerm, selectedCategory]);
+
+  const filteredDrinks = useMemo(() => {
+    return drinks.filter(drink => {
+      const matchesSearch = drink.name.toLowerCase().includes(searchTerm.toLowerCase()) || drink.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'todas' || drink.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchTerm, selectedCategory]);
+
+  const currentCategories = selectedSection === 'pizzas' ? pizzaCategories : drinkCategories;
+  const currentItems = selectedSection === 'pizzas' ? filteredPizzas : filteredDrinks;
 
   if (isLoading) {
     return <MenuLoadingSkeleton />;
@@ -139,20 +154,64 @@ const Menu = () => {
         </div>
       </div>
 
+      {/* Seletor de Seção (Pizzas/Bebidas) */}
+      <div className="flex justify-center mb-8">
+        <div className="bg-gray-100 rounded-full p-1 flex">
+          <button
+            onClick={() => {
+              setSelectedSection('pizzas');
+              setSelectedCategory('todas');
+            }}
+            className={`px-6 py-2 rounded-full font-medium transition-all ${
+              selectedSection === 'pizzas'
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            🍕 Pizzas
+          </button>
+          <button
+            onClick={() => {
+              setSelectedSection('bebidas');
+              setSelectedCategory('todas');
+            }}
+            className={`px-6 py-2 rounded-full font-medium transition-all ${
+              selectedSection === 'bebidas'
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            🥤 Bebidas
+          </button>
+        </div>
+      </div>
+
       {/* Search and Filters */}
       {isMobile ? (
-        <MobileSearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} categories={categories.map(cat => cat.name)} />
+        <MobileSearchBar 
+          searchTerm={searchTerm} 
+          onSearchChange={setSearchTerm} 
+          selectedCategory={selectedCategory} 
+          onCategoryChange={setSelectedCategory} 
+          categories={currentCategories.map(cat => cat.name)} 
+        />
       ) : (
         <div className="mb-8">
           {/* Desktop Search */}
           <div className="relative max-w-md mx-auto mb-8">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input type="text" placeholder="Buscar pizzas..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            <input 
+              type="text" 
+              placeholder={`Buscar ${selectedSection === 'pizzas' ? 'pizzas' : 'bebidas'}...`}
+              value={searchTerm} 
+              onChange={e => setSearchTerm(e.target.value)} 
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+            />
           </div>
 
           {/* Desktop Categories */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            {categories.map(category => (
+            {currentCategories.map(category => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
@@ -169,19 +228,30 @@ const Menu = () => {
         </div>
       )}
 
-      {/* Pizza Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {filteredPizzas.map(pizza => (
-          <PizzaCard key={pizza.id} {...pizza} onAddToCart={handleAddToCart} />
-        ))}
+      {/* Items Grid */}
+      <div className={`grid gap-8 ${
+        selectedSection === 'bebidas' 
+          ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+          : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+      }`}>
+        {selectedSection === 'pizzas' 
+          ? filteredPizzas.map(pizza => (
+              <PizzaCard key={pizza.id} {...pizza} onAddToCart={handleAddToCart} />
+            ))
+          : filteredDrinks.map(drink => (
+              <DrinkCard key={drink.id} {...drink} onAddToCart={handleAddToCart} />
+            ))
+        }
       </div>
 
       {/* No Results */}
-      {filteredPizzas.length === 0 && (
+      {currentItems.length === 0 && (
         <div className="text-center py-16">
-          <div className="text-6xl mb-4">🍕</div>
+          <div className="text-6xl mb-4">
+            {selectedSection === 'pizzas' ? '🍕' : '🥤'}
+          </div>
           <h3 className="text-2xl font-bold text-gray-800 mb-2">
-            Nenhuma pizza encontrada
+            {selectedSection === 'pizzas' ? 'Nenhuma pizza encontrada' : 'Nenhuma bebida encontrada'}
           </h3>
           <p className="text-gray-600 mb-6">
             Tente buscar por outros termos ou explore nossas categorias
@@ -193,7 +263,7 @@ const Menu = () => {
             }}
             className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-medium transition-colors"
           >
-            Ver Todas as Pizzas
+            Ver Todos os {selectedSection === 'pizzas' ? 'Sabores' : 'Produtos'}
           </button>
         </div>
       )}
