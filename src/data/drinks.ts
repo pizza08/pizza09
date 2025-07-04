@@ -1,5 +1,6 @@
 
 
+
 export interface Drink {
   id: string;
   name: string;
@@ -70,7 +71,7 @@ export const drinks: Drink[] = [
     name: 'Água com Gás',
     description: 'Água mineral gaseificada refrescante.',
     price: 4.00,
-    image: 'https://images.unsplash.com/photo-1523362628745-0c100150b504?w=300&h=300&fit=crop&crop=center',
+    image: '/lovable-uploads/465d581e-160f-4a35-8adb-e7657215e179.png',
     category: 'agua',
     size: '500ml'
   }
@@ -82,3 +83,4 @@ export const drinkCategories = [
   { id: 'suco', name: 'Sucos', count: drinks.filter(d => d.category === 'suco').length },
   { id: 'agua', name: 'Águas', count: drinks.filter(d => d.category === 'agua').length }
 ];
+
