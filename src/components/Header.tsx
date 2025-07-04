@@ -1,17 +1,18 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Clock, MapPin } from 'lucide-react';
 import WhatsAppOrder from './WhatsAppOrder';
+
 interface HeaderProps {
   cartItemCount: number;
 }
-const Header = ({
-  cartItemCount
-}: HeaderProps) => {
+
+const Header = ({ cartItemCount }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  return <>
+
+  return (
+    <>
       {/* Barra de Informações Importantes */}
       <div className="bg-orange-500 text-white py-2 px-4">
         <div className="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4 text-sm">
@@ -36,7 +37,7 @@ const Header = ({
               <img 
                 src="/lovable-uploads/e70ae742-0551-4158-90f5-1f8aee0f479e.png" 
                 alt="Forno Nobre Logo" 
-                className="w-10 h-10 object-contain"
+                className="w-12 h-12 object-contain"
               />
               <span className="text-xl font-bold text-gray-800">Forno Nobre</span>
             </Link>
@@ -87,6 +88,8 @@ const Header = ({
             </div>
           </div>}
       </header>
-    </>;
+    </>
+  );
 };
+
 export default Header;
