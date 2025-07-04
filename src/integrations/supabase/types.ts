@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      combo_selections: {
+        Row: {
+          combo_id: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string
+          id: string
+          selected_pizzas: Json
+          status: string
+          total_price: number
+        }
+        Insert: {
+          combo_id: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone: string
+          id?: string
+          selected_pizzas: Json
+          status?: string
+          total_price: number
+        }
+        Update: {
+          combo_id?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          selected_pizzas?: Json
+          status?: string
+          total_price?: number
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string
@@ -30,6 +66,39 @@ export type Database = {
           id?: string
           name?: string
           phone?: string
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          interesse: string | null
+          mensagem: string | null
+          nome: string
+          origem: string | null
+          telefone: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          interesse?: string | null
+          mensagem?: string | null
+          nome: string
+          origem?: string | null
+          telefone: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          interesse?: string | null
+          mensagem?: string | null
+          nome?: string
+          origem?: string | null
+          telefone?: string
         }
         Relationships: []
       }
