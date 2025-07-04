@@ -3,29 +3,47 @@ import React, { useState, useMemo } from 'react';
 import PizzaCard from '../components/PizzaCard';
 import DrinkCard from '../components/DrinkCard';
 import NotificationBanner from '../components/NotificationBanner';
-import MobileSearchBar from '../components/MobileSearchBar';
+import MobileFilters from '../components/MobileFilters';
 import { MenuLoadingSkeleton } from '../components/LoadingStates';
 import { pizzas } from '../data/pizzas';
 import { drinks, drinkCategories } from '../data/drinks';
 import { useCart } from '../contexts/CartContext';
+import { useCartPersistence } from '../hooks/useCartPersistence';
 import { useIsMobile } from '../hooks/use-mobile';
-import { Search, Phone, Clock, MapPin } from 'lucide-react';
+import { Search, Phone, Clock, MapPin, ArrowUp } from 'lucide-react';
 
 const Menu = () => {
   const { dispatch } = useCart();
+  useCartPersistence(); // Ativar persistência do carrinho
+  
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todas');
   const [selectedSection, setSelectedSection] = useState<'pizzas' | 'bebidas'>('pizzas');
   const [isLoading, setIsLoading] = useState(true);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
-  // Simular carregamento inicial
+  // Simular carregamento inicial mais realista
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
+    }, 800); // Reduzido de 1500ms para 800ms
     return () => clearTimeout(timer);
   }, []);
+
+  // Controlar botão "voltar ao topo"
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleAddToCart = (item: any) => {
     dispatch({
@@ -121,7 +139,7 @@ const Menu = () => {
       <div className="mb-8 bg-yellow-50 rounded-xl p-6 border border-yellow-200">
         <h2 className="text-2xl font-bold text-center mb-4">🔥 Combos Mais Pedidos</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg p-4 border-2 border-orange-200 hover:border-orange-400 transition-colors cursor-pointer">
+          <div className="bg-white rounded-lg p-4 border-2 border-orange-200 hover:border-orange-400 transition-colors cursor-pointer hover:shadow-md">
             <h3 className="font-semibold text-orange-600">Combo Família</h3>
             <p className="text-sm text-gray-600 mb-2">2 Pizzas G + 1 Refrigerantes</p>
             <div className="flex items-center justify-between">
@@ -131,7 +149,7 @@ const Menu = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white rounded-lg p-4 border-2 border-blue-200 hover:border-blue-400 transition-colors cursor-pointer">
+          <div className="bg-white rounded-lg p-4 border-2 border-blue-200 hover:border-blue-400 transition-colors cursor-pointer hover:shadow-md">
             <h3 className="font-semibold text-blue-600">Combo Casal</h3>
             <p className="text-sm text-gray-600 mb-2">1 Pizza G + 1 Refrigerantes</p>
             <div className="flex items-center justify-between">
@@ -141,7 +159,7 @@ const Menu = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white rounded-lg p-4 border-2 border-purple-200 hover:border-purple-400 transition-colors cursor-pointer">
+          <div className="bg-white rounded-lg p-4 border-2 border-purple-200 hover:border-purple-400 transition-colors cursor-pointer hover:shadow-md">
             <h3 className="font-semibold text-purple-600">Combo Individual</h3>
             <p className="text-sm text-gray-600 mb-2">1 Pizza M + 1 Refrigerante</p>
             <div className="flex items-center justify-between">
@@ -188,12 +206,13 @@ const Menu = () => {
 
       {/* Search and Filters */}
       {isMobile ? (
-        <MobileSearchBar 
+        <MobileFilters 
           searchTerm={searchTerm} 
           onSearchChange={setSearchTerm} 
           selectedCategory={selectedCategory} 
           onCategoryChange={setSelectedCategory} 
-          categories={currentCategories.map(cat => cat.name)} 
+          categories={currentCategories}
+          selectedSection={selectedSection}
         />
       ) : (
         <div className="mb-8">
@@ -215,10 +234,10 @@ const Menu = () => {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-6 py-3 rounded-full font-medium transition-all ${
+                className={`px-6 py-3 rounded-full font-medium transition-all hover:scale-105 ${
                   selectedCategory === category.id
                     ? 'bg-orange-500 text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'
+                    : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200 hover:shadow-md'
                 }`}
               >
                 {category.name} ({category.count})
@@ -261,7 +280,7 @@ const Menu = () => {
               setSearchTerm('');
               setSelectedCategory('todas');
             }}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-medium transition-colors"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-medium transition-colors hover:shadow-md"
           >
             Ver Todos os {selectedSection === 'pizzas' ? 'Sabores' : 'Produtos'}
           </button>
@@ -273,11 +292,21 @@ const Menu = () => {
         <div className="fixed bottom-4 right-4 z-50">
           <button
             onClick={handleWhatsAppOrder}
-            className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-colors"
+            className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-colors hover:shadow-xl"
           >
             <Phone className="w-6 h-6" />
           </button>
         </div>
+      )}
+
+      {/* Botão Voltar ao Topo */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-4 left-4 z-50 bg-gray-800 hover:bg-gray-900 text-white p-3 rounded-full shadow-lg transition-all hover:shadow-xl"
+        >
+          <ArrowUp className="w-5 h-5" />
+        </button>
       )}
     </div>
   );

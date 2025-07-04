@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Plus, Star, Clock } from 'lucide-react';
 import WhatsAppOrder from './WhatsAppOrder';
 import { ButtonLoading } from './LoadingStates';
+import { useCartToast } from '../hooks/useCartToast';
 
 interface DrinkCardProps {
   id: string;
@@ -17,26 +18,31 @@ interface DrinkCardProps {
 
 const DrinkCard = ({ id, name, description, price, image, size, popular, onAddToCart }: DrinkCardProps) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { showAddToCartSuccess } = useCartToast();
 
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsAddingToCart(true);
     
-    await new Promise(resolve => setTimeout(resolve, 600));
+    // Simular tempo real de processamento
+    await new Promise(resolve => setTimeout(resolve, 300));
     
-    onAddToCart({
+    const drinkItem = {
       id,
       name,
       price,
       image,
       quantity: 1
-    });
+    };
+    
+    onAddToCart(drinkItem);
+    showAddToCartSuccess(name);
     
     setIsAddingToCart(false);
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 relative">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 group">
       {/* Badge de Popular */}
       {popular && (
         <div className="absolute top-2 left-2 z-10">
@@ -46,12 +52,13 @@ const DrinkCard = ({ id, name, description, price, image, size, popular, onAddTo
         </div>
       )}
 
-      {/* Imagem */}
-      <div className="relative">
+      {/* Imagem com lazy loading */}
+      <div className="relative overflow-hidden">
         <img 
           src={image} 
           alt={name}
-          className="w-full h-32 object-cover"
+          className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
         />
       </div>
       
@@ -81,6 +88,8 @@ const DrinkCard = ({ id, name, description, price, image, size, popular, onAddTo
           <WhatsAppOrder 
             variant="quick"
             text="Pedir via WhatsApp"
+            drinkName={name}
+            drinkPrice={price}
             className="w-full justify-center text-sm"
           />
           
@@ -92,7 +101,7 @@ const DrinkCard = ({ id, name, description, price, image, size, popular, onAddTo
           ) : (
             <button
               onClick={handleQuickAdd}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium text-sm flex items-center justify-center gap-1"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium text-sm flex items-center justify-center gap-1 hover:shadow-md"
             >
               <Plus className="w-4 h-4" />
               Adicionar ao Carrinho

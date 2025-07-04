@@ -4,6 +4,7 @@ import { Plus, Star, Clock } from 'lucide-react';
 import PizzaCustomizationModal from './PizzaCustomizationModal';
 import WhatsAppOrder from './WhatsAppOrder';
 import { ButtonLoading } from './LoadingStates';
+import { useCartToast } from '../hooks/useCartToast';
 
 interface PizzaCardProps {
   id: string;
@@ -18,6 +19,7 @@ interface PizzaCardProps {
 const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }: PizzaCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { showAddToCartSuccess } = useCartToast();
 
   const pizza = { 
     id, 
@@ -46,22 +48,26 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
     e.stopPropagation();
     setIsAddingToCart(true);
     
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // Reduzir tempo de loading artificial
+    await new Promise(resolve => setTimeout(resolve, 400));
     
-    onAddToCart({
+    const pizzaItem = {
       id,
       name: `${name} (Média)`,
       price: finalPrice,
       image,
       quantity: 1
-    });
+    };
+    
+    onAddToCart(pizzaItem);
+    showAddToCartSuccess(`${name} (Média)`);
     
     setIsAddingToCart(false);
   };
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative group">
         {/* Badge de Promoção */}
         {hasPromotion && (
           <div className="absolute top-3 left-3 z-10">
@@ -71,12 +77,13 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
           </div>
         )}
 
-        {/* Imagem */}
-        <div className="relative" onClick={() => setIsModalOpen(true)}>
+        {/* Imagem com lazy loading */}
+        <div className="relative overflow-hidden" onClick={() => setIsModalOpen(true)}>
           <img 
             src={image} 
             alt={name}
-            className="w-full h-48 object-cover cursor-pointer"
+            className="w-full h-48 object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
           />
           
           {/* Rating Badge */}
@@ -133,7 +140,7 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
               ) : (
                 <button
                   onClick={handleQuickAdd}
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium text-sm flex items-center justify-center gap-1"
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium text-sm flex items-center justify-center gap-1 hover:shadow-md"
                 >
                   <Plus className="w-4 h-4" />
                   Carrinho
@@ -142,7 +149,7 @@ const PizzaCard = ({ id, name, description, price, image, rating, onAddToCart }:
               
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full transition-colors text-sm"
+                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full transition-colors text-sm hover:shadow-sm"
               >
                 Personalizar
               </button>
