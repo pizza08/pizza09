@@ -110,7 +110,7 @@ const Contact = () => {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span>Segunda a Quinta:</span>
+                    <span>Terça a Sexta:</span>
                     <span className="font-medium">18:00 - 23:30</span>
                   </div>
                   <div className="flex justify-between">
