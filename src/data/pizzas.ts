@@ -286,7 +286,7 @@ export const pizzas: Pizza[] = [
     basePrice: 44.00,
     price: 44.00,
     rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1571091655789-405eb7a3a3a8?w=500&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '/lovable-uploads/f06b10fa-82fe-49e9-a6b7-04374b407dd1.png',
     category: 'Doces',
     ingredients: ['chocolate ao leite', 'granulado', 'leite condensado'],
     sizes: {
