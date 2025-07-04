@@ -1,4 +1,5 @@
 
+
 export interface Drink {
   id: string;
   name: string;
@@ -48,7 +49,7 @@ export const drinks: Drink[] = [
     name: 'Suco de Laranja',
     description: 'Suco natural de laranja, rico em vitamina C.',
     price: 7.00,
-    image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=300&h=300&fit=crop&crop=center',
+    image: '/lovable-uploads/fb058abd-432f-4fc0-bd85-8502ee2f35e8.png',
     category: 'suco',
     size: '300ml',
     popular: true
@@ -81,3 +82,4 @@ export const drinkCategories = [
   { id: 'suco', name: 'Sucos', count: drinks.filter(d => d.category === 'suco').length },
   { id: 'agua', name: 'Águas', count: drinks.filter(d => d.category === 'agua').length }
 ];
+
