@@ -7,10 +7,9 @@ import { pizzas } from '../data/pizzas';
 import { useCart } from '../contexts/CartContext';
 import { useIsMobile } from '../hooks/use-mobile';
 import { Search, Phone, Clock, MapPin } from 'lucide-react';
+
 const Menu = () => {
-  const {
-    dispatch
-  } = useCart();
+  const { dispatch } = useCart();
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todas');
@@ -23,17 +22,19 @@ const Menu = () => {
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
+
   const handleAddToCart = (pizza: any) => {
     dispatch({
       type: 'ADD_ITEM',
       payload: pizza
     });
   };
+
   const handleWhatsAppOrder = () => {
-    const phone = "5511999999999"; // Substitua pelo número real
-    const message = "Olá! Gostaria de fazer um pedido pelo cardápio online 🍕";
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    const whatsappUrl = "https://wa.me/message/6DSN3FA5UPI4G1";
+    window.open(whatsappUrl, '_blank');
   };
+
   const categories = [{
     id: 'todas',
     name: 'Todas',
@@ -47,6 +48,7 @@ const Menu = () => {
     name: 'Doces',
     count: pizzas.filter(p => p.category === 'Doces').length
   }];
+
   const filteredPizzas = useMemo(() => {
     return pizzas.filter(pizza => {
       const matchesSearch = pizza.name.toLowerCase().includes(searchTerm.toLowerCase()) || pizza.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -54,10 +56,13 @@ const Menu = () => {
       return matchesSearch && matchesCategory;
     });
   }, [searchTerm, selectedCategory]);
+
   if (isLoading) {
     return <MenuLoadingSkeleton />;
   }
-  return <div className="container mx-auto px-4 py-8">
+
+  return (
+    <div className="container mx-auto px-4 py-8">
       <NotificationBanner />
       
       {/* Header Simplificado */}
@@ -135,7 +140,10 @@ const Menu = () => {
       </div>
 
       {/* Search and Filters */}
-      {isMobile ? <MobileSearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} categories={categories.map(cat => cat.name)} /> : <div className="mb-8">
+      {isMobile ? (
+        <MobileSearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} categories={categories.map(cat => cat.name)} />
+      ) : (
+        <div className="mb-8">
           {/* Desktop Search */}
           <div className="relative max-w-md mx-auto mb-8">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -144,19 +152,33 @@ const Menu = () => {
 
           {/* Desktop Categories */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            {categories.map(category => <button key={category.id} onClick={() => setSelectedCategory(category.id)} className={`px-6 py-3 rounded-full font-medium transition-all ${selectedCategory === category.id ? 'bg-orange-500 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'}`}>
+            {categories.map(category => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-6 py-3 rounded-full font-medium transition-all ${
+                  selectedCategory === category.id
+                    ? 'bg-orange-500 text-white shadow-lg'
+                    : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'
+                }`}
+              >
                 {category.name} ({category.count})
-              </button>)}
+              </button>
+            ))}
           </div>
-        </div>}
+        </div>
+      )}
 
       {/* Pizza Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {filteredPizzas.map(pizza => <PizzaCard key={pizza.id} {...pizza} onAddToCart={handleAddToCart} />)}
+        {filteredPizzas.map(pizza => (
+          <PizzaCard key={pizza.id} {...pizza} onAddToCart={handleAddToCart} />
+        ))}
       </div>
 
       {/* No Results */}
-      {filteredPizzas.length === 0 && <div className="text-center py-16">
+      {filteredPizzas.length === 0 && (
+        <div className="text-center py-16">
           <div className="text-6xl mb-4">🍕</div>
           <h3 className="text-2xl font-bold text-gray-800 mb-2">
             Nenhuma pizza encontrada
@@ -164,20 +186,31 @@ const Menu = () => {
           <p className="text-gray-600 mb-6">
             Tente buscar por outros termos ou explore nossas categorias
           </p>
-          <button onClick={() => {
-        setSearchTerm('');
-        setSelectedCategory('todas');
-      }} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-medium transition-colors">
+          <button
+            onClick={() => {
+              setSearchTerm('');
+              setSelectedCategory('todas');
+            }}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-medium transition-colors"
+          >
             Ver Todas as Pizzas
           </button>
-        </div>}
+        </div>
+      )}
 
       {/* WhatsApp CTA Fixo no Mobile */}
-      {isMobile && <div className="fixed bottom-4 right-4 z-50">
-          <button onClick={handleWhatsAppOrder} className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-colors">
+      {isMobile && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <button
+            onClick={handleWhatsAppOrder}
+            className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-colors"
+          >
             <Phone className="w-6 h-6" />
           </button>
-        </div>}
-    </div>;
+        </div>
+      )}
+    </div>
+  );
 };
+
 export default Menu;

@@ -19,42 +19,9 @@ const WhatsAppOrder = ({
   pizzaPrice 
 }: WhatsAppOrderProps) => {
   const { state } = useCart();
-  const phoneNumber = "5511999999999"; // Número da pizzaria
-
-  const generateWhatsAppMessage = () => {
-    let message = "🍕 *Pedido de Pizza*\n\n";
-    
-    if (variant === 'quick' && pizzaName && pizzaPrice) {
-      // Pedido rápido de uma pizza específica
-      message += `*${pizzaName}*\n`;
-      message += `Preço: R$ ${pizzaPrice.toFixed(2).replace('.', ',')}\n\n`;
-      message += "👋 Olá! Gostaria de fazer este pedido.\n";
-      message += "Podem me enviar mais detalhes sobre tamanhos e entrega?";
-    } else if (state.items.length > 0) {
-      // Pedido com itens do carrinho
-      message += "*Itens do Pedido:*\n";
-      
-      state.items.forEach((item, index) => {
-        message += `${index + 1}. ${item.name}\n`;
-        message += `   Qtd: ${item.quantity} | Preço: R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}\n\n`;
-      });
-      
-      const total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      message += `*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
-      message += "👋 Olá! Gostaria de finalizar este pedido.\n";
-      message += "Podem confirmar o endereço de entrega e forma de pagamento?";
-    } else {
-      // Mensagem geral
-      message += "👋 Olá! Gostaria de fazer um pedido de pizza.\n";
-      message += "Podem me enviar o cardápio e informações sobre entrega?";
-    }
-    
-    return encodeURIComponent(message);
-  };
+  const whatsappUrl = "https://wa.me/message/6DSN3FA5UPI4G1";
 
   const handleWhatsAppClick = () => {
-    const message = generateWhatsAppMessage();
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };
 
