@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
@@ -63,6 +62,8 @@ const Checkout = () => {
       description: `Pedido Pizzaria - ${state.items.length} item(s)`,
       customerName: data.name,
       customerPhone: data.phone,
+      customerEmail: data.email,
+      customerCPF: data.cpf,
       orderId: `temp_${Date.now()}`
     });
 
@@ -84,7 +85,7 @@ const Checkout = () => {
     const orderData = {
       customerName: deliveryData.name,
       customerPhone: deliveryData.phone,
-      customerEmail: undefined,
+      customerEmail: deliveryData.email,
       deliveryAddress: deliveryData.address,
       paymentMethod: selectedPaymentMethod,
       notes: undefined,

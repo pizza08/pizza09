@@ -8,6 +8,8 @@ interface PaymentData {
   description: string;
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
+  customerCPF: string;
   orderId: string;
 }
 
@@ -18,6 +20,7 @@ interface PaymentResponse {
   qrCodeImage?: string;
   amount?: number;
   status?: string;
+  expiresAt?: string;
   error?: string;
 }
 
@@ -29,6 +32,8 @@ export const usePayment = () => {
     setIsLoading(true);
     
     try {
+      console.log('Sending payment data:', paymentData);
+
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: paymentData
       });

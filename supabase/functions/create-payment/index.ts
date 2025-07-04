@@ -1,13 +1,14 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { corsHeaders } from '../_shared/cors.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 interface PaymentRequest {
   amount: number
   description: string
   customerName: string
   customerPhone: string
+  customerEmail?: string
+  customerCPF: string
   orderId: string
 }
 
@@ -17,31 +18,37 @@ serve(async (req) => {
   }
 
   try {
-    const { amount, description, customerName, customerPhone, orderId }: PaymentRequest = await req.json()
+    const { amount, description, customerName, customerPhone, customerEmail, customerCPF, orderId }: PaymentRequest = await req.json()
 
     const abacateApiKey = Deno.env.get('ABACATE_PAY_API_KEY')
     if (!abacateApiKey) {
       throw new Error('ABACATE_PAY_API_KEY not configured')
     }
 
-    // Criar cobrança na Abacate Pay
-    const abacateResponse = await fetch('https://api.abacatepay.com/v1/billing', {
+    console.log('Creating PIX QR Code with data:', {
+      amount,
+      customerName,
+      customerPhone,
+      customerCPF,
+      orderId
+    })
+
+    // Criar PIX QR Code na Abacate Pay usando o endpoint correto
+    const abacateResponse = await fetch('https://api.abacatepay.com/v1/pixQrCode/create', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${abacateApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        frequency: 'once',
-        methods: ['PIX'],
         amount: Math.round(amount * 100), // Converter para centavos
+        expiresIn: 900, // 15 minutos
         description: description,
         customer: {
           name: customerName,
           cellphone: customerPhone.replace(/\D/g, ''), // Remove formatação
-        },
-        metadata: {
-          orderId: orderId
+          email: customerEmail || `${customerPhone.replace(/\D/g, '')}@temp.com`, // Email obrigatório
+          taxId: customerCPF.replace(/\D/g, '') // Remove formatação do CPF
         }
       })
     })
@@ -49,19 +56,27 @@ serve(async (req) => {
     if (!abacateResponse.ok) {
       const errorData = await abacateResponse.text()
       console.error('Abacate Pay error:', errorData)
-      throw new Error(`Abacate Pay API error: ${abacateResponse.status}`)
+      throw new Error(`Abacate Pay API error: ${abacateResponse.status} - ${errorData}`)
     }
 
-    const paymentData = await abacateResponse.json()
+    const responseData = await abacateResponse.json()
+    console.log('Abacate Pay response:', responseData)
+
+    if (responseData.error) {
+      throw new Error(`Abacate Pay error: ${responseData.error}`)
+    }
+
+    const pixData = responseData.data
 
     return new Response(
       JSON.stringify({
         success: true,
-        paymentId: paymentData.id,
-        qrCode: paymentData.pix_qr_code,
-        qrCodeImage: paymentData.pix_qr_code_image,
-        amount: paymentData.amount / 100, // Converter de volta para reais
-        status: paymentData.status
+        paymentId: pixData.id,
+        qrCode: pixData.brCode,
+        qrCodeImage: pixData.brCodeBase64,
+        amount: pixData.amount / 100, // Converter de volta para reais
+        status: pixData.status,
+        expiresAt: pixData.expiresAt
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -70,7 +85,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error creating payment:', error)
+    console.error('Error creating PIX QR Code:', error)
     return new Response(
       JSON.stringify({
         success: false,

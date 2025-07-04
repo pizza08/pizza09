@@ -16,6 +16,7 @@ interface PixDeliveryModalProps {
 export interface PixDeliveryData {
   name: string;
   phone: string;
+  email: string;
   address: string;
   cpf: string;
 }
@@ -24,6 +25,7 @@ const PixDeliveryModal = ({ isOpen, onClose, onConfirm, isLoading }: PixDelivery
   const [formData, setFormData] = useState<PixDeliveryData>({
     name: '',
     phone: '',
+    email: '',
     address: '',
     cpf: ''
   });
@@ -60,12 +62,18 @@ const PixDeliveryModal = ({ isOpen, onClose, onConfirm, isLoading }: PixDelivery
 
     if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório';
     if (!formData.phone.trim()) newErrors.phone = 'Telefone é obrigatório';
+    if (!formData.email.trim()) newErrors.email = 'Email é obrigatório';
     if (!formData.address.trim()) newErrors.address = 'Endereço é obrigatório';
     if (!formData.cpf.trim()) newErrors.cpf = 'CPF é obrigatório';
 
     // Validação de telefone
     if (formData.phone && !/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(formData.phone)) {
       newErrors.phone = 'Formato inválido. Use: (11) 99999-9999';
+    }
+
+    // Validação de email
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Email inválido';
     }
 
     // Validação básica de CPF
@@ -85,7 +93,7 @@ const PixDeliveryModal = ({ isOpen, onClose, onConfirm, isLoading }: PixDelivery
   };
 
   const handleClose = () => {
-    setFormData({ name: '', phone: '', address: '', cpf: '' });
+    setFormData({ name: '', phone: '', email: '', address: '', cpf: '' });
     setErrors({});
     onClose();
   };
@@ -125,6 +133,20 @@ const PixDeliveryModal = ({ isOpen, onClose, onConfirm, isLoading }: PixDelivery
               className={errors.phone ? 'border-red-500' : ''}
             />
             {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email *
+            </label>
+            <Input
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder="seu@email.com"
+              className={errors.email ? 'border-red-500' : ''}
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
           <div>
