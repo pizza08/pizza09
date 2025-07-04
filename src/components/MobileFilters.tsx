@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Search, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
+import SmartSearch from './SmartSearch';
 
 interface MobileFiltersProps {
   searchTerm: string;
@@ -21,15 +22,13 @@ const MobileFilters = ({
 }: MobileFiltersProps) => {
   return (
     <div className="sticky top-16 bg-white z-40 border-b border-gray-200 pb-4 mb-6">
-      {/* Search Bar */}
-      <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-        <input
-          type="text"
+      {/* Smart Search Bar */}
+      <div className="mb-4">
+        <SmartSearch
+          searchTerm={searchTerm}
+          onSearchChange={onSearchChange}
+          selectedSection={selectedSection}
           placeholder={`Buscar ${selectedSection === 'pizzas' ? 'pizzas' : 'bebidas'}...`}
-          value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
         />
       </div>
 

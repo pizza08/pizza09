@@ -4,17 +4,20 @@ import PizzaCard from '../components/PizzaCard';
 import DrinkCard from '../components/DrinkCard';
 import NotificationBanner from '../components/NotificationBanner';
 import MobileFilters from '../components/MobileFilters';
+import SmartSearch from '../components/SmartSearch';
+import FunctionalCombos from '../components/FunctionalCombos';
+import MiniCartDropdown from '../components/MiniCartDropdown';
 import { MenuLoadingSkeleton } from '../components/LoadingStates';
 import { pizzas } from '../data/pizzas';
 import { drinks, drinkCategories } from '../data/drinks';
 import { useCart } from '../contexts/CartContext';
 import { useCartPersistence } from '../hooks/useCartPersistence';
 import { useIsMobile } from '../hooks/use-mobile';
-import { Search, Phone, Clock, MapPin, ArrowUp } from 'lucide-react';
+import { Phone, Clock, MapPin, ArrowUp } from 'lucide-react';
 
 const Menu = () => {
   const { dispatch } = useCart();
-  useCartPersistence(); // Ativar persistência do carrinho
+  useCartPersistence();
   
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,15 +26,15 @@ const Menu = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  // Simular carregamento inicial mais realista
+  // Carregamento otimizado - sem delays artificiais
   React.useEffect(() => {
+    // Simular apenas o tempo necessário para carregar dados reais
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 800); // Reduzido de 1500ms para 800ms
+    }, 300);
     return () => clearTimeout(timer);
   }, []);
 
-  // Controlar botão "voltar ao topo"
   React.useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 400);
@@ -73,15 +76,18 @@ const Menu = () => {
 
   const filteredPizzas = useMemo(() => {
     return pizzas.filter(pizza => {
-      const matchesSearch = pizza.name.toLowerCase().includes(searchTerm.toLowerCase()) || pizza.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'todas' || pizza.category.toLowerCase() === selectedCategory.toLowerCase();
+      const matchesSearch = pizza.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           pizza.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'todas' || 
+                             pizza.category.toLowerCase() === selectedCategory.toLowerCase();
       return matchesSearch && matchesCategory;
     });
   }, [searchTerm, selectedCategory]);
 
   const filteredDrinks = useMemo(() => {
     return drinks.filter(drink => {
-      const matchesSearch = drink.name.toLowerCase().includes(searchTerm.toLowerCase()) || drink.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = drink.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           drink.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategory === 'todas' || drink.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
@@ -98,87 +104,62 @@ const Menu = () => {
     <div className="container mx-auto px-4 py-8">
       <NotificationBanner />
       
-      {/* Header Simplificado */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-          Nosso Cardápio
-        </h1>
-        <p className="text-xl text-gray-600 mb-6">
-          Sabores únicos preparados com ingredientes frescos
-        </p>
+      {/* Header com Mini Cart */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="text-center flex-1">
+          <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+            Nosso Cardápio
+          </h1>
+          <p className="text-xl text-gray-600 mb-6">
+            Sabores únicos preparados com ingredientes frescos
+          </p>
+        </div>
+        
+        {!isMobile && (
+          <div className="ml-4">
+            <MiniCartDropdown />
+          </div>
+        )}
+      </div>
 
-        {/* Informações de Delivery - Destacadas */}
-        <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 mb-8 border border-orange-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div className="flex items-center justify-center gap-2">
-              <Clock className="w-5 h-5 text-orange-500" />
-              <div>
-                <p className="font-semibold text-gray-800">Entrega Rápida</p>
-                <p className="text-sm text-gray-600">30-40 minutos</p>
-              </div>
+      {/* Informações de Delivery */}
+      <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 mb-8 border border-orange-200">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <Clock className="w-5 h-5 text-orange-500" />
+            <div>
+              <p className="font-semibold text-gray-800">Entrega Rápida</p>
+              <p className="text-sm text-gray-600">30-40 minutos</p>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <MapPin className="w-5 h-5 text-green-500" />
-              <div>
-                <p className="font-semibold text-gray-800">Área de Cobertura</p>
-                <p className="text-sm text-gray-600">Até 5km do centro</p>
-              </div>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <MapPin className="w-5 h-5 text-green-500" />
+            <div>
+              <p className="font-semibold text-gray-800">Área de Cobertura</p>
+              <p className="text-sm text-gray-600">Até 5km do centro</p>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <Phone className="w-5 h-5 text-blue-500" />
-              <button onClick={handleWhatsAppOrder} className="text-center hover:scale-105 transition-transform">
-                <p className="font-semibold text-gray-800">Pedir WhatsApp</p>
-                <p className="text-sm text-green-600 font-medium">(47) 99280-9169</p>
-              </button>
-            </div>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <Phone className="w-5 h-5 text-blue-500" />
+            <button onClick={handleWhatsAppOrder} className="text-center hover:scale-105 transition-transform">
+              <p className="font-semibold text-gray-800">Pedir WhatsApp</p>
+              <p className="text-sm text-green-600 font-medium">(47) 99280-9169</p>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Combos Mais Pedidos - Simplificado */}
-      <div className="mb-8 bg-yellow-50 rounded-xl p-6 border border-yellow-200">
-        <h2 className="text-2xl font-bold text-center mb-4">🔥 Combos Mais Pedidos</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg p-4 border-2 border-orange-200 hover:border-orange-400 transition-colors cursor-pointer hover:shadow-md">
-            <h3 className="font-semibold text-orange-600">Combo Família</h3>
-            <p className="text-sm text-gray-600 mb-2">2 Pizzas G + 1 Refrigerantes</p>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold">R$ 89,90</span>
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                Economia R$ 15
-              </span>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg p-4 border-2 border-blue-200 hover:border-blue-400 transition-colors cursor-pointer hover:shadow-md">
-            <h3 className="font-semibold text-blue-600">Combo Casal</h3>
-            <p className="text-sm text-gray-600 mb-2">1 Pizza G + 1 Refrigerantes</p>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold">R$ 49,90</span>
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                Economia R$ 8
-              </span>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg p-4 border-2 border-purple-200 hover:border-purple-400 transition-colors cursor-pointer hover:shadow-md">
-            <h3 className="font-semibold text-purple-600">Combo Individual</h3>
-            <p className="text-sm text-gray-600 mb-2">1 Pizza M + 1 Refrigerante</p>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold">R$ 35,90</span>
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                Economia R$ 5
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Combos Funcionais */}
+      <FunctionalCombos />
 
-      {/* Seletor de Seção (Pizzas/Bebidas) */}
+      {/* Seletor de Seção */}
       <div className="flex justify-center mb-8">
         <div className="bg-gray-100 rounded-full p-1 flex">
           <button
             onClick={() => {
               setSelectedSection('pizzas');
               setSelectedCategory('todas');
+              setSearchTerm('');
             }}
             className={`px-6 py-2 rounded-full font-medium transition-all ${
               selectedSection === 'pizzas'
@@ -192,6 +173,7 @@ const Menu = () => {
             onClick={() => {
               setSelectedSection('bebidas');
               setSelectedCategory('todas');
+              setSearchTerm('');
             }}
             className={`px-6 py-2 rounded-full font-medium transition-all ${
               selectedSection === 'bebidas'
@@ -204,7 +186,7 @@ const Menu = () => {
         </div>
       </div>
 
-      {/* Search and Filters */}
+      {/* Busca e Filtros */}
       {isMobile ? (
         <MobileFilters 
           searchTerm={searchTerm} 
@@ -216,15 +198,13 @@ const Menu = () => {
         />
       ) : (
         <div className="mb-8">
-          {/* Desktop Search */}
-          <div className="relative max-w-md mx-auto mb-8">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input 
-              type="text" 
+          {/* Desktop Smart Search */}
+          <div className="max-w-md mx-auto mb-8">
+            <SmartSearch
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              selectedSection={selectedSection}
               placeholder={`Buscar ${selectedSection === 'pizzas' ? 'pizzas' : 'bebidas'}...`}
-              value={searchTerm} 
-              onChange={e => setSearchTerm(e.target.value)} 
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
             />
           </div>
 
@@ -287,9 +267,10 @@ const Menu = () => {
         </div>
       )}
 
-      {/* WhatsApp CTA Fixo no Mobile */}
+      {/* Mobile WhatsApp CTA */}
       {isMobile && (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+          <MiniCartDropdown />
           <button
             onClick={handleWhatsAppOrder}
             className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-colors hover:shadow-xl"
