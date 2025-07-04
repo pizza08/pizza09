@@ -35,7 +35,7 @@ const Header = ({
               <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-xl">P</span>
               </div>
-              <span className="text-xl font-bold text-gray-800">PizzaExpress</span>
+              <span className="text-xl font-bold text-gray-800">Forno Nobre</span>
             </Link>
 
             {/* Desktop Navigation */}
