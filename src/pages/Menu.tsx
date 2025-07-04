@@ -76,7 +76,7 @@ const Menu = () => {
               <Clock className="w-5 h-5 text-orange-500" />
               <div>
                 <p className="font-semibold text-gray-800">Entrega Rápida</p>
-                <p className="text-sm text-gray-600">25-35 minutos</p>
+                <p className="text-sm text-gray-600">30-40 minutos</p>
               </div>
             </div>
             <div className="flex items-center justify-center gap-2">
