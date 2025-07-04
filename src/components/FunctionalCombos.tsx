@@ -28,46 +28,47 @@ const FunctionalCombos = () => {
 
   // Buscar pizzas do banco de dados para usar imagens reais
   const margheritaPizza = pizzas.find(p => p.name === 'Margherita');
+  const pepperoniPizza = pizzas.find(p => p.name === 'Pepperoni');
   const calabresaPizza = pizzas.find(p => p.name === 'Calabresa');
-  const chocolatePizza = pizzas.find(p => p.name.includes('Chocolate'));
-  const portuguesaPizza = pizzas.find(p => p.name === 'Portuguesa');
 
   const combos: ComboItem[] = [
     {
-      id: 'combo-familia',
-      name: 'Combo Família Feliz',
-      originalPrice: 89.90,
-      comboPrice: 69.90,
-      savings: 20.00,
+      id: 'combo-family',
+      name: 'Combo Family',
+      originalPrice: 140.00,
+      comboPrice: 89.90,
+      savings: 50.10,
       badge: 'hot',
-      timeLeft: 45,
+      timeLeft: 120,
       items: [
-        { name: 'Pizza Grande Margherita', image: margheritaPizza?.image || '/placeholder.svg' },
-        { name: 'Pizza Média Calabresa', image: calabresaPizza?.image || '/placeholder.svg' },
-        { name: 'Refrigerante 2L', image: '/lovable-uploads/586d5ea7-8294-4934-9400-70ec4d276e46.png' }
+        { name: '2x Pizza Grande Margherita', image: margheritaPizza?.image || '/placeholder.svg' },
+        { name: 'Coca-Cola 2L', image: '/lovable-uploads/586d5ea7-8294-4934-9400-70ec4d276e46.png' }
       ]
     },
     {
-      id: 'combo-doce',
-      name: 'Combo Sobremesa',
-      originalPrice: 45.80,
-      comboPrice: 35.90,
-      savings: 9.90,
+      id: 'combo-night',
+      name: 'Combo Night',
+      originalPrice: 67.00,
+      comboPrice: 49.90,
+      savings: 17.10,
       badge: 'new',
+      timeLeft: 90,
       items: [
-        { name: 'Pizza Doce Chocolate', image: chocolatePizza?.image || '/placeholder.svg' },
-        { name: 'Sorvete 500ml', image: '/lovable-uploads/e70ae742-0551-4158-90f5-1f8aee0f479e.png' }
+        { name: 'Pizza Grande Pepperoni', image: pepperoniPizza?.image || '/placeholder.svg' },
+        { name: 'Coca-Cola 2L', image: '/lovable-uploads/586d5ea7-8294-4934-9400-70ec4d276e46.png' }
       ]
     },
     {
-      id: 'combo-individual',
-      name: 'Combo Individual',
-      originalPrice: 42.80,
-      comboPrice: 35.90,
-      savings: 6.90,
+      id: 'combo-big-family',
+      name: 'Combo Big Family',
+      originalPrice: 159.00,
+      comboPrice: 119.90,
+      savings: 39.10,
+      badge: 'limited',
+      timeLeft: 60,
       items: [
-        { name: 'Pizza Média Portuguesa', image: portuguesaPizza?.image || '/placeholder.svg' },
-        { name: 'Refrigerante Lata', image: '/lovable-uploads/152d8163-1b64-440b-9fae-c6aa27acaa45.png' }
+        { name: '3x Pizza Grande Calabresa', image: calabresaPizza?.image || '/placeholder.svg' },
+        { name: '2x Coca-Cola 2L', image: '/lovable-uploads/586d5ea7-8294-4934-9400-70ec4d276e46.png' }
       ]
     }
   ];
@@ -121,10 +122,10 @@ const FunctionalCombos = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-6">
           <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
-            🔥 Combos Especiais
+            🔥 Super Combos - Promoção Limitada!
           </h2>
           <p className="text-gray-600">
-            Economize até R$ 20 com nossos combos exclusivos!
+            Economize até R$ 50 com nossos combos exclusivos - Por tempo limitado!
           </p>
         </div>
 
@@ -143,7 +144,7 @@ const FunctionalCombos = () => {
                 )}
                 
                 {combo.timeLeft && (
-                  <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                  <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 animate-pulse">
                     <Timer className="w-3 h-3" />
                     {formatTime(combo.timeLeft)}
                   </div>
@@ -179,17 +180,17 @@ const FunctionalCombos = () => {
                     ))}
                   </div>
 
-                  {/* Preços */}
+                  {/* Preços com destaque maior */}
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <span className="text-sm line-through text-gray-400">
                         R$ {combo.originalPrice.toFixed(2).replace('.', ',')}
                       </span>
-                      <div className="text-xl font-bold text-orange-500">
+                      <div className="text-2xl font-bold text-orange-500">
                         R$ {combo.comboPrice.toFixed(2).replace('.', ',')}
                       </div>
                     </div>
-                    <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">
+                    <div className="bg-green-100 text-green-800 px-3 py-2 rounded-full text-xs font-bold animate-bounce">
                       Economize R$ {combo.savings.toFixed(2).replace('.', ',')}
                     </div>
                   </div>
@@ -212,7 +213,7 @@ const FunctionalCombos = () => {
                   ) : (
                     <button
                       onClick={() => handleAddCombo(combo)}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium text-sm flex items-center justify-center gap-1 hover:shadow-md"
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full transition-colors font-medium text-sm flex items-center justify-center gap-1 hover:shadow-md transform hover:scale-105"
                     >
                       <ShoppingCart className="w-4 h-4" />
                       Adicionar ao Carrinho
@@ -228,6 +229,13 @@ const FunctionalCombos = () => {
         <div className="text-center mt-4 md:hidden">
           <p className="text-xs text-gray-500">
             ← Deslize para ver mais combos →
+          </p>
+        </div>
+
+        {/* Alerta de tempo limitado */}
+        <div className="bg-red-100 border border-red-300 rounded-lg p-4 mt-6 text-center">
+          <p className="text-red-800 font-semibold">
+            ⚡ PROMOÇÃO POR TEMPO LIMITADO! Aproveite enquanto os estoques durarem!
           </p>
         </div>
       </div>
