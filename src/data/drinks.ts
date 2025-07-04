@@ -38,16 +38,7 @@ export const drinks: Drink[] = [
     name: 'Sprite',
     description: 'Refrigerante de limão refrescante e cítrico.',
     price: 11.50,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=300&fit=crop&crop=center',
-    category: 'refrigerante',
-    size: '2L'
-  },
-  {
-    id: 'fanta-2l',
-    name: 'Fanta Laranja',
-    description: 'Refrigerante sabor laranja doce e refrescante.',
-    price: 11.50,
-    image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=300&h=300&fit=crop&crop=center',
+    image: '/lovable-uploads/0e101663-4a3d-4621-b9db-eaf9a5da53c1.png',
     category: 'refrigerante',
     size: '2L'
   },
