@@ -61,7 +61,7 @@ export const drinks: Drink[] = [
     name: 'Água Crystal',
     description: 'Água mineral natural cristalina.',
     price: 3.50,
-    image: 'https://images.unsplash.com/photo-1560963604-6e9e3e4b3050?w=300&h=300&fit=crop&crop=center',
+    image: '/lovable-uploads/d5ed4a3c-a9f7-40c7-b5f6-7287c7ea2ff7.png',
     category: 'agua',
     size: '500ml'
   },
@@ -82,4 +82,3 @@ export const drinkCategories = [
   { id: 'suco', name: 'Sucos', count: drinks.filter(d => d.category === 'suco').length },
   { id: 'agua', name: 'Águas', count: drinks.filter(d => d.category === 'agua').length }
 ];
-
