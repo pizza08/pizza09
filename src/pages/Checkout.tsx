@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
@@ -9,12 +8,15 @@ import { Textarea } from '../components/ui/textarea';
 import { Separator } from '../components/ui/separator';
 import PaymentMethods from '../components/PaymentMethods';
 import AddressAutocomplete from '../components/AddressAutocomplete';
-import { ArrowLeft, MapPin, CreditCard, CheckCircle, Clock } from 'lucide-react';
+import PaymentQRCode from '../components/PaymentQRCode';
+import { ArrowLeft, MapPin, CreditCard, CheckCircle, Clock, QrCode } from 'lucide-react';
+import { usePayment } from '../hooks/usePayment';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useCart();
-  const { createOrder, isLoading } = useOrders();
+  const { createOrder, isLoading: isCreatingOrder } = useOrders();
+  const { createPayment, isLoading: isCreatingPayment } = usePayment();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -27,6 +29,14 @@ const Checkout = () => {
   const [deliveryTime, setDeliveryTime] = useState('15-20 min');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [paymentData, setPaymentData] = useState<{
+    paymentId: string;
+    qrCode: string;
+    qrCodeImage: string;
+    amount: number;
+  } | null>(null);
 
   const deliveryFee = 5.00;
   const subtotal = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -75,6 +85,33 @@ const Checkout = () => {
       return;
     }
 
+    // Se for pagamento PIX, criar QR code primeiro
+    if (formData.paymentMethod === 'pix') {
+      const paymentResponse = await createPayment({
+        amount: total,
+        description: `Pedido Pizzaria - ${state.items.length} item(s)`,
+        customerName: formData.name,
+        customerPhone: formData.phone,
+        orderId: `temp_${Date.now()}` // ID temporário, será substituído após criar o pedido
+      });
+
+      if (paymentResponse.success && paymentResponse.qrCode && paymentResponse.qrCodeImage) {
+        setPaymentData({
+          paymentId: paymentResponse.paymentId!,
+          qrCode: paymentResponse.qrCode,
+          qrCodeImage: paymentResponse.qrCodeImage,
+          amount: paymentResponse.amount!
+        });
+        setShowQRCode(true);
+        return;
+      }
+    } else {
+      // Para outros métodos de pagamento, criar pedido diretamente
+      await createOrderDirectly();
+    }
+  };
+
+  const createOrderDirectly = async () => {
     const orderData = {
       customerName: formData.name,
       customerPhone: formData.phone,
@@ -84,7 +121,7 @@ const Checkout = () => {
       notes: formData.notes || undefined,
       items: state.items.map(item => ({
         pizzaName: item.name,
-        pizzaSize: 'Média', // Por enquanto fixo, pode ser melhorado
+        pizzaSize: 'Média',
         quantity: item.quantity,
         unitPrice: item.price,
         totalPrice: item.price * item.quantity,
@@ -103,6 +140,16 @@ const Checkout = () => {
     }
   };
 
+  const handlePaymentConfirmed = async () => {
+    // Criar o pedido após confirmação do pagamento
+    await createOrderDirectly();
+  };
+
+  const handleCancelPayment = () => {
+    setShowQRCode(false);
+    setPaymentData(null);
+  };
+
   if (state.items.length === 0) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
@@ -111,6 +158,33 @@ const Checkout = () => {
         <Button onClick={() => navigate('/menu')} className="bg-orange-500 hover:bg-orange-600">
           Ver Cardápio
         </Button>
+      </div>
+    );
+  }
+
+  // Se estiver mostrando QR Code
+  if (showQRCode && paymentData) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <div className="mb-6 text-center">
+          <Button
+            variant="ghost"
+            onClick={handleCancelPayment}
+            className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar ao Checkout
+          </Button>
+        </div>
+        
+        <PaymentQRCode
+          paymentId={paymentData.paymentId}
+          qrCode={paymentData.qrCode}
+          qrCodeImage={paymentData.qrCodeImage}
+          amount={paymentData.amount}
+          onPaymentConfirmed={handlePaymentConfirmed}
+          onCancel={handleCancelPayment}
+        />
       </div>
     );
   }
@@ -259,11 +333,16 @@ const Checkout = () => {
 
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isCreatingOrder || isCreatingPayment}
               className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 text-lg"
             >
-              {isLoading ? (
+              {isCreatingOrder || isCreatingPayment ? (
                 'Processando...'
+              ) : formData.paymentMethod === 'pix' ? (
+                <>
+                  <QrCode className="w-5 h-5 mr-2" />
+                  Gerar QR Code PIX
+                </>
               ) : (
                 <>
                   <CheckCircle className="w-5 h-5 mr-2" />
