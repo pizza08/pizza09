@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, ShoppingCart, Star, Clock, Flame, Timer } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -121,9 +120,10 @@ const FunctionalCombos = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Layout horizontal com scroll */}
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {combos.map((combo) => (
-            <div key={combo.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div key={combo.id} className="flex-shrink-0 w-72 bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               
               {/* Header com badges */}
               <div className="relative p-4 pb-2">
@@ -211,6 +211,13 @@ const FunctionalCombos = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Indicador de scroll para mobile */}
+        <div className="text-center mt-4 md:hidden">
+          <p className="text-xs text-gray-500">
+            ← Deslize para ver mais combos →
+          </p>
         </div>
       </div>
     </div>
