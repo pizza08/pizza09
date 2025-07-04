@@ -170,7 +170,7 @@ export const pizzas: Pizza[] = [
     basePrice: 41.00,
     price: 41.00,
     rating: 4.5,
-    image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '/lovable-uploads/848b9fa8-f7ff-4272-9ddf-07edb815c4c4.png',
     category: 'Tradicionais',
     ingredients: ['bacon', 'mussarela'],
     sizes: {
