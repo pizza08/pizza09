@@ -1,16 +1,15 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useOrders } from '../hooks/useOrders';
+import { usePayment } from '../hooks/usePayment';
 import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Textarea } from '../components/ui/textarea';
 import { Separator } from '../components/ui/separator';
 import PaymentMethods from '../components/PaymentMethods';
-import AddressAutocomplete from '../components/AddressAutocomplete';
 import PaymentQRCode from '../components/PaymentQRCode';
-import { ArrowLeft, MapPin, CreditCard, CheckCircle, Clock, QrCode } from 'lucide-react';
-import { usePayment } from '../hooks/usePayment';
+import PixDeliveryModal, { PixDeliveryData } from '../components/PixDeliveryModal';
+import { ArrowLeft, CheckCircle, CreditCard } from 'lucide-react';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -18,22 +17,13 @@ const Checkout = () => {
   const { createOrder, isLoading: isCreatingOrder } = useOrders();
   const { createPayment, isLoading: isCreatingPayment } = usePayment();
   
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    notes: '',
-    paymentMethod: ''
-  });
-  
-  const [deliveryTime, setDeliveryTime] = useState('15-20 min');
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [showPixModal, setShowPixModal] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
+  const [deliveryData, setDeliveryData] = useState<PixDeliveryData | null>(null);
   const [paymentData, setPaymentData] = useState<{
     paymentId: string;
-    qrCode: string;
+    qrCode: string;  
     qrCodeImage: string;
     amount: number;
   } | null>(null);
@@ -42,83 +32,62 @@ const Checkout = () => {
   const subtotal = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const total = subtotal + deliveryFee;
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório';
-    if (!formData.phone.trim()) newErrors.phone = 'Telefone é obrigatório';
-    if (!formData.address.trim()) newErrors.address = 'Endereço é obrigatório';
-    if (!formData.paymentMethod) newErrors.paymentMethod = 'Selecione uma forma de pagamento';
-
-    // Validação de telefone básica
-    if (formData.phone && !/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(formData.phone)) {
-      newErrors.phone = 'Formato inválido. Use: (11) 99999-9999';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handlePaymentMethodSelect = (method: string) => {
+    setSelectedPaymentMethod(method);
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+  const handleFinalizarPedido = () => {
+    if (!selectedPaymentMethod) {
+      alert('Selecione uma forma de pagamento');
+      return;
     }
-  };
-
-  const formatPhone = (value: string) => {
-    const cleaned = value.replace(/\D/g, '');
-    const match = cleaned.match(/^(\d{2})(\d{4,5})(\d{4})$/);
-    if (match) {
-      return `(${match[1]}) ${match[2]}-${match[3]}`;
-    }
-    return value;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
 
     if (state.items.length === 0) {
       alert('Seu carrinho está vazio!');
       return;
     }
 
-    // Se for pagamento PIX, criar QR code primeiro
-    if (formData.paymentMethod === 'pix') {
-      const paymentResponse = await createPayment({
-        amount: total,
-        description: `Pedido Pizzaria - ${state.items.length} item(s)`,
-        customerName: formData.name,
-        customerPhone: formData.phone,
-        orderId: `temp_${Date.now()}` // ID temporário, será substituído após criar o pedido
-      });
-
-      if (paymentResponse.success && paymentResponse.qrCode && paymentResponse.qrCodeImage) {
-        setPaymentData({
-          paymentId: paymentResponse.paymentId!,
-          qrCode: paymentResponse.qrCode,
-          qrCodeImage: paymentResponse.qrCodeImage,
-          amount: paymentResponse.amount!
-        });
-        setShowQRCode(true);
-        return;
-      }
+    if (selectedPaymentMethod === 'pix') {
+      setShowPixModal(true);
     } else {
       // Para outros métodos de pagamento, criar pedido diretamente
-      await createOrderDirectly();
+      createOrderDirectly();
+    }
+  };
+
+  const handlePixDeliveryConfirm = async (data: PixDeliveryData) => {
+    setDeliveryData(data);
+    
+    const paymentResponse = await createPayment({
+      amount: total,
+      description: `Pedido Pizzaria - ${state.items.length} item(s)`,
+      customerName: data.name,
+      customerPhone: data.phone,
+      orderId: `temp_${Date.now()}`
+    });
+
+    if (paymentResponse.success && paymentResponse.qrCode && paymentResponse.qrCodeImage) {
+      setPaymentData({
+        paymentId: paymentResponse.paymentId!,
+        qrCode: paymentResponse.qrCode,
+        qrCodeImage: paymentResponse.qrCodeImage,
+        amount: paymentResponse.amount!
+      });
+      setShowPixModal(false);
+      setShowQRCode(true);
     }
   };
 
   const createOrderDirectly = async () => {
+    if (!deliveryData) return;
+
     const orderData = {
-      customerName: formData.name,
-      customerPhone: formData.phone,
+      customerName: deliveryData.name,
+      customerPhone: deliveryData.phone,
       customerEmail: undefined,
-      deliveryAddress: formData.address,
-      paymentMethod: formData.paymentMethod,
-      notes: formData.notes || undefined,
+      deliveryAddress: deliveryData.address,
+      paymentMethod: selectedPaymentMethod,
+      notes: undefined,
       items: state.items.map(item => ({
         pizzaName: item.name,
         pizzaSize: 'Média',
@@ -141,13 +110,13 @@ const Checkout = () => {
   };
 
   const handlePaymentConfirmed = async () => {
-    // Criar o pedido após confirmação do pagamento
     await createOrderDirectly();
   };
 
   const handleCancelPayment = () => {
     setShowQRCode(false);
     setPaymentData(null);
+    setDeliveryData(null);
   };
 
   if (state.items.length === 0) {
@@ -202,95 +171,23 @@ const Checkout = () => {
         </Button>
         
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Finalizar Pedido</h1>
-        <p className="text-gray-600">Preencha seus dados para receber suas pizzas quentinhas! 🍕</p>
+        <p className="text-gray-600">Selecione a forma de pagamento para continuar 🍕</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid lg:grid-cols-2 gap-8">
-        {/* Dados do Cliente */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Forma de Pagamento */}
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-lg shadow-md border">
             <div className="flex items-center mb-4">
-              <MapPin className="w-5 h-5 text-orange-500 mr-2" />
-              <h2 className="text-xl font-semibold">Dados de Entrega</h2>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nome Completo *
-                </label>
-                <Input
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Seu nome completo"
-                  className={errors.name ? 'border-red-500' : ''}
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Telefone *
-                </label>
-                <Input
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', formatPhone(e.target.value))}
-                  placeholder="(11) 99999-9999"
-                  className={errors.phone ? 'border-red-500' : ''}
-                />
-                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Endereço Completo *
-                </label>
-                <AddressAutocomplete
-                  onAddressSelect={(address, time) => {
-                    handleInputChange('address', address);
-                    setDeliveryTime(time);
-                  }}
-                  className={errors.address ? 'border-red-500' : ''}
-                />
-                {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-                
-                {/* Tempo de entrega */}
-                <div className="mt-2 flex items-center text-sm text-green-600">
-                  <Clock className="w-4 h-4 mr-1" />
-                  Tempo estimado: {deliveryTime}
-                </div>
-              </div>
-
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Observações (opcional)
-                </label>
-                <Textarea
-                  value={formData.notes}
-                  onChange={(e) => handleInputChange('notes', e.target.value)}
-                  placeholder="Alguma observação especial?"
-                  rows={2}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Forma de Pagamento */}
-          <div className="bg-white p-6 rounded-lg shadow-md border">
-            <div className="flex items-center mb-4">
               <CreditCard className="w-5 h-5 text-orange-500 mr-2" />
-              <h2 className="text-xl font-semibold">Pagamento</h2>
+              <h2 className="text-xl font-semibold">Forma de Pagamento</h2>
             </div>
             
             <PaymentMethods
-              selectedMethod={formData.paymentMethod}
-              onMethodSelect={(method) => handleInputChange('paymentMethod', method)}
+              selectedMethod={selectedPaymentMethod}
+              onMethodSelect={handlePaymentMethodSelect}
               orderTotal={total}
             />
-            {errors.paymentMethod && (
-              <p className="text-red-500 text-sm mt-2">{errors.paymentMethod}</p>
-            )}
           </div>
         </div>
 
@@ -332,17 +229,12 @@ const Checkout = () => {
             </div>
 
             <Button
-              type="submit"
-              disabled={isCreatingOrder || isCreatingPayment}
+              onClick={handleFinalizarPedido}
+              disabled={!selectedPaymentMethod || isCreatingOrder || isCreatingPayment}
               className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 text-lg"
             >
               {isCreatingOrder || isCreatingPayment ? (
                 'Processando...'
-              ) : formData.paymentMethod === 'pix' ? (
-                <>
-                  <QrCode className="w-5 h-5 mr-2" />
-                  Gerar QR Code PIX
-                </>
               ) : (
                 <>
                   <CheckCircle className="w-5 h-5 mr-2" />
@@ -356,7 +248,15 @@ const Checkout = () => {
             </p>
           </div>
         </div>
-      </form>
+      </div>
+
+      {/* Modal PIX */}
+      <PixDeliveryModal
+        isOpen={showPixModal}
+        onClose={() => setShowPixModal(false)}
+        onConfirm={handlePixDeliveryConfirm}
+        isLoading={isCreatingPayment}
+      />
     </div>
   );
 };
