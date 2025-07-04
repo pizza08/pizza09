@@ -24,11 +24,20 @@ const SmartMenuPreview = () => {
   const getFilteredPizzas = () => {
     switch (activeFilter) {
       case 'populares':
-        return pizzas.slice(0, 6).sort((a, b) => b.rating - a.rating);
+        // Ordenar por popularidade (popular + rating)
+        return pizzas
+          .sort((a, b) => {
+            if (a.popular && !b.popular) return -1;
+            if (!a.popular && b.popular) return 1;
+            return b.rating - a.rating;
+          })
+          .slice(0, 6);
       case 'rapidas':
-        return pizzas.slice(0, 6);
+        // Pizzas tradicionais que são mais rápidas de fazer
+        return pizzas.filter(p => p.category === 'Tradicionais').slice(0, 6);
       case 'trending':
-        return pizzas.slice(2, 8);
+        // Pizzas doces que estão em alta
+        return pizzas.filter(p => p.category === 'Doces').slice(0, 6);
       default:
         return pizzas.slice(0, 6);
     }

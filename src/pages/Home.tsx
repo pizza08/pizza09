@@ -3,8 +3,28 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, MapPin, Star } from 'lucide-react';
 import WhatsAppOrder from '../components/WhatsAppOrder';
+import { pizzas } from '../data/pizzas';
 
 const Home = () => {
+  // Buscar pizzas mais populares do banco de dados
+  const popularPizzas = pizzas
+    .filter(p => p.popular || p.rating >= 4.7)
+    .slice(0, 3)
+    .map(pizza => ({
+      name: pizza.name,
+      price: pizza.price,
+      description: pizza.description,
+      image: pizza.image
+    }));
+
+  // Se não houver pizzas populares suficientes, pegar as primeiras 3
+  const displayPizzas = popularPizzas.length >= 3 ? popularPizzas : pizzas.slice(0, 3).map(pizza => ({
+    name: pizza.name,
+    price: pizza.price,
+    description: pizza.description,
+    image: pizza.image
+  }));
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
       {/* Hero Section Simplificado */}
@@ -61,31 +81,12 @@ const Home = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Pizzas Mais Pedidas</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { 
-                  name: "Margherita", 
-                  price: 32.90, 
-                  description: "Molho, mussarela, tomate, manjericão",
-                  image: "/placeholder.svg"
-                },
-                { 
-                  name: "Calabresa", 
-                  price: 36.90, 
-                  description: "Molho, mussarela, calabresa, cebola",
-                  image: "/placeholder.svg"
-                },
-                { 
-                  name: "Portuguesa", 
-                  price: 42.90, 
-                  description: "Molho, mussarela, presunto, ovos, cebola",
-                  image: "/placeholder.svg"
-                }
-              ].map((pizza, index) => (
+              {displayPizzas.map((pizza, index) => (
                 <div key={index} className="text-center">
                   <img 
                     src={pizza.image} 
                     alt={pizza.name}
-                    className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
+                    className="w-32 h-32 object-cover rounded-full mx-auto mb-4 border-4 border-orange-100"
                   />
                   <h3 className="font-semibold text-lg text-gray-800">{pizza.name}</h3>
                   <p className="text-gray-600 text-sm mb-2">{pizza.description}</p>

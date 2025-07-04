@@ -5,6 +5,7 @@ import { useCart } from '../contexts/CartContext';
 import { useCartToast } from '../hooks/useCartToast';
 import WhatsAppOrder from './WhatsAppOrder';
 import { ButtonLoading } from './LoadingStates';
+import { pizzas } from '../data/pizzas';
 
 interface ComboItem {
   id: string;
@@ -25,6 +26,12 @@ const FunctionalCombos = () => {
   const { showAddToCartSuccess } = useCartToast();
   const [isAddingToCart, setIsAddingToCart] = useState<string | null>(null);
 
+  // Buscar pizzas do banco de dados para usar imagens reais
+  const margheritaPizza = pizzas.find(p => p.name === 'Margherita');
+  const calabresaPizza = pizzas.find(p => p.name === 'Calabresa');
+  const chocolatePizza = pizzas.find(p => p.name.includes('Chocolate'));
+  const portuguesaPizza = pizzas.find(p => p.name === 'Portuguesa');
+
   const combos: ComboItem[] = [
     {
       id: 'combo-familia',
@@ -35,9 +42,9 @@ const FunctionalCombos = () => {
       badge: 'hot',
       timeLeft: 45,
       items: [
-        { name: 'Pizza Grande Margherita', image: '/placeholder.svg' },
-        { name: 'Pizza Média Calabresa', image: '/placeholder.svg' },
-        { name: 'Refrigerante 2L', image: '/placeholder.svg' }
+        { name: 'Pizza Grande Margherita', image: margheritaPizza?.image || '/placeholder.svg' },
+        { name: 'Pizza Média Calabresa', image: calabresaPizza?.image || '/placeholder.svg' },
+        { name: 'Refrigerante 2L', image: '/lovable-uploads/586d5ea7-8294-4934-9400-70ec4d276e46.png' }
       ]
     },
     {
@@ -48,8 +55,8 @@ const FunctionalCombos = () => {
       savings: 9.90,
       badge: 'new',
       items: [
-        { name: 'Pizza Doce Chocolate', image: '/placeholder.svg' },
-        { name: 'Sorvete 500ml', image: '/placeholder.svg' }
+        { name: 'Pizza Doce Chocolate', image: chocolatePizza?.image || '/placeholder.svg' },
+        { name: 'Sorvete 500ml', image: '/lovable-uploads/e70ae742-0551-4158-90f5-1f8aee0f479e.png' }
       ]
     },
     {
@@ -59,8 +66,8 @@ const FunctionalCombos = () => {
       comboPrice: 35.90,
       savings: 6.90,
       items: [
-        { name: 'Pizza Média Portuguesa', image: '/placeholder.svg' },
-        { name: 'Refrigerante Lata', image: '/placeholder.svg' }
+        { name: 'Pizza Média Portuguesa', image: portuguesaPizza?.image || '/placeholder.svg' },
+        { name: 'Refrigerante Lata', image: '/lovable-uploads/152d8163-1b64-440b-9fae-c6aa27acaa45.png' }
       ]
     }
   ];
